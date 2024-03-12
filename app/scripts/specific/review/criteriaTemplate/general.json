@@ -1,0 +1,655 @@
+{
+  "criteria": [
+    {
+      "group": "Essential",
+      "name": "Research purpose",
+      "description": "states a purpose, problem, objective, or research question",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Motivation",
+      "description": "explains why the problem, objective, or research question is important (motivation)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Definitions",
+      "description": "defines jargon, acronyms and key concepts",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Methodology",
+      "description": "methodology is appropriate (not necessarily optimal) for stated purpose or questions",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Data collection",
+      "description": "describes in detail what, where, when and how data were collected (see the Sampling Supplement)",      "levels": [
+      {
+        "name": "Strength",
+        "description": ""
+      },
+      {
+        "name": "Minor weakness",
+        "description": ""
+      },
+      {
+        "name": "Major weakness",
+        "description": ""
+      }
+    ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Data analysis description",
+      "description": "describes in detail how the data were analyzed",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Statistical assumptions",
+      "description": "discusses and validates assumptions of any statistical tests used",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Result presentation",
+      "description": "present results",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Result addressing research",
+      "description": "results directly address research questions",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Supported claims",
+      "description": "supports main claims or conclusions with explicit evidence (data/observations) or arguments",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Results implications",
+      "description": "discusses implications of the results",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Study limitations",
+      "description": "discusses the study's limitations and threats to validity",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "name": "Contribution to BoK",
+      "description": "contributes in some way to the collective body of knowledge",
+      "group": "Essential",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Language misleading",
+      "description": "language is not misleading; any grammatical problems do not substantially hinder understanding",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "name": "Benefit risk balance",
+      "description": "balances the study's anticipated benefits with its potential risks or harms, minimizing risk or harm wherever possible (see the ethics supplements for studies with Human Participants or Secondary Data)",
+      "group": "Essential",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Essential",
+      "name": "Visualizations",
+      "description": "visualizations/graphs are not misleading (see the Information Visualization Supplement)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Related work synthesis",
+      "description": "summarizes and synthesizes a reasonable selection of related work",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Relation with related work",
+      "description": "clearly describes relationship between contribution(s) and related work",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Epistemological stance",
+      "description": "states epistemological stance (e.g. post-positivism, interpretivism, critical realism)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Statistical power/saturation",
+      "description": "appropriate statistical power (for quantitative work) or saturation (for qualitative work)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Limitations mitigation",
+      "description": "reasonable attempts to investigate or mitigate limitations",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Study realism",
+      "description": "discusses study’s realism, assumptions and sensitivity of the results to its realism/assumptions",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Recommendation providing",
+      "description": "provides plausibly useful interpretations or recommendations for practice, education or research",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Open sharing",
+      "description": "openly shares data and materials to the extent possible within practical and ethical limits (see the Open Science Supplement)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Presentation",
+      "description": "concise, precise, well-organized and easy-to-read presentation",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Visualizations for argumentation",
+      "description": "visualizations (e.g. graphs, diagrams, tables) advance the paper’s arguments or contribution",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Researchers roles",
+      "description": "clarifies the roles and responsibilities of the researchers (i.e. who did what?)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Auto-reflection",
+      "description": "provides an auto-reflection or assessment of the authors’ own work (e.g. lessons learned)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Desirable",
+      "name": "Multiple raters use",
+      "description": "uses multiple raters for any subjective judgments (see the IRR/IRA Supplement)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "group": "Extraordinary",
+      "name": "Multiple data collection",
+      "description": "applies two or more data collection or analysis strategies to the same research question (see the Multimethodology Standard)",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },{
+      "group": "Extraordinary",
+      "name": "Multiple epistemological perspectives",
+      "description": "approaches the same research question(s) from multiple epistemological perspectives",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },{
+      "group": "Extraordinary",
+      "name": "Research methodology innovation",
+      "description": "innovates on research methodology while completing an empirical study",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    }
+  ],
+  "defaultLevels": [
+    {
+      "name": "Strength",
+      "description": ""
+    },
+    {
+      "name": "Minor weakness",
+      "description": ""
+    },
+    {
+      "name": "Major weakness",
+      "description": ""
+    }
+  ]
+}

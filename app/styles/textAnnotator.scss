@@ -1,0 +1,89 @@
+.reply_user {
+  font-size: 70%;
+  font-style: oblique;
+}
+
+.reply_text {
+  font-size: 70%;
+}
+.highlightedAnnotation .highlightedAnnotation{ // TODO
+  background-color: transparent !important;
+}
+
+// POLE SELECTION IN COMMENT BOX
+.criterionName{
+  margin-bottom:5%;
+}
+.poleRadio{
+  display:none;
+}
+.poleRadio:checked + .poleImage{
+  opacity:1;
+  border-radius:15px 15px 15px 15px;
+  border: solid 2px #a4caf4;
+}
+.poleRadio + .poleImage{
+  opacity:0.4;
+  vertical-align:middle;
+}
+.poleRadio + .poleImage:hover{
+  opacity:1;
+}
+
+#swal-criterionQuestion{
+  width: 88%;
+}
+
+.askDiv{
+  display: inline-block;
+  vertical-align: center; /* Align elements at the top */
+  width: 100%;
+  /* box-sizing: border-box; /* Include padding and border in width */
+  /* height: 100px; Set the desired height */
+  /* border: 1px solid #ccc; Optional: Add borders for visual separation */
+  text-align: center; /* Optional: Center content horizontally */
+  /* line-height: 100px;  Optional: Vertically center content */
+  /* font-size: 16px; /* Optional: Restore font size */
+}
+
+.askImage{
+  justify-content: center;
+  align-items: center;
+}
+
+
+.askImageHover{
+  opacity:0.4;
+  vertical-align:middle;
+}
+.askImageHover:hover{
+  opacity:1;
+}
+
+.btnFragment{
+  width: 49%;
+  background-color: #87CEFA;
+  height: 2.1em;
+}
+.btnFragment:hover{
+  width: 49%;
+  height: 2.1em;
+  background-color: #1E90FF
+}
+.notMargin{
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.llmAnswerButton{
+  width:50%;
+  background-color: #87CEFA;
+  font-size: 15px;
+}
+
+#llmAnswerOKButton{
+  background-color: #1E90FF;
+  width:100%;
+}

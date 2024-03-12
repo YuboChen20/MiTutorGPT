@@ -1,0 +1,98 @@
+{
+  "criteria": [
+    {
+      "name": "Contribution",
+      "group": "Criteria",
+      "description": "contribution of the paper being reviewed to the collective body of knowledge",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "name": "Paper's strengths",
+      "group": "Criteria",
+      "description": "the strengths of the paper being reviewed",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "name": "Paper's weaknesses",
+      "group": "Criteria",
+      "description": "the weaknesses of the paper being reviewed",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    },
+    {
+      "name": "Overall evaluation",
+      "group": "Criteria",
+      "description": "a general assessment of the paper being reviewed",
+      "levels": [
+        {
+          "name": "Strength",
+          "description": ""
+        },
+        {
+          "name": "Minor weakness",
+          "description": ""
+        },
+        {
+          "name": "Major weakness",
+          "description": ""
+        }
+      ],
+      "custom": true
+    }
+  ],
+  "defaultLevels": [
+    {
+      "name": "Strength",
+      "description": ""
+    },
+    {
+      "name": "Minor weakness",
+      "description": ""
+    },
+    {
+      "name": "Major weakness",
+      "description": ""
+    }
+  ]
+}

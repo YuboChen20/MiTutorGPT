@@ -1,0 +1,59 @@
+{
+  "name": "__MSG_appName__",
+  "short_name": "__MSG_appShortName__",
+  "description": "__MSG_appDescription__",
+  "version": "1.1.3",
+  "manifest_version": 3,
+  "default_locale": "en",
+  "icons": {
+    "256": "images/annotateGPT.png"
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
+  "content_scripts": [
+    {
+      "matches": ["file:///*/*"],
+      "js": ["scripts/contentScript.js"],
+      "css": ["styles/contentScript.css"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_icon": "images/annotateGPT.png",
+    "default_title": "__MSG_browserActionTitle__"
+  },
+  "options_page": "pages/options.html",
+  "options_ui": {
+    "page": "pages/options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "unlimitedStorage",
+    "https://api.anthropic.com/*",
+    "https://api.anthropic.com"
+  ],
+  "host_permissions": [
+    "file://*/*",
+    "https://api.anthropic.com/*",
+    "https://api.anthropic.com"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "pages/*",
+        "content/*",
+        "images/*"
+      ],
+      "matches": [
+        "file://*/*"
+      ]
+    }
+  ]
+}

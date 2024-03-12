@@ -1,0 +1,15 @@
+gulp default para comprimir y hacer el resto de las tareas de la carpeta task
+ entre ellas tiene el eslint para corregir los codigod.  
+ al final crea una carpeta dist y dentro la extension a añadir a chrome
+
+contenttypemanager guarda los datos del pdf
+
+ver el objeto de annotate
+saber el funcionamiento de callback
+sidebar carga lo de lado
+groupselector para importar modelos import schemarmodels....??
+tagmanager cargar los tagas, criterios
+
+reviewcontent para los botones de arriba.
+
+customcrietriamanager, para las botones de los criterios.
