@@ -4,12 +4,13 @@ const Level = require('./Level')
 const LanguageUtils = require('../../utils/LanguageUtils')
 
 class Criteria extends GuideElement {
-  constructor ({name, color, review, group = 'Other', description, custom = false, compile, alternative}) {
+  constructor ({name, color, review, group = 'Other', description, solution, custom = false, compile, alternative}) {
     super({name, color, parentElement: review})
     this.levels = this.childElements
     this.group = group
     this.review = this.parentElement
     this.description = description
+    this.solution = solution
     this.custom = custom
     if (compile) {
       this.compile = compile
@@ -54,6 +55,7 @@ class Criteria extends GuideElement {
       target: [],
       text: jsYaml.dump({
         description: this.description,
+        solution: this.solution,
         group: this.group,
         custom: this.custom,
         alternative: alternative,
@@ -80,6 +82,7 @@ class Criteria extends GuideElement {
       name: this.name,
       group: this.group,
       description: this.description,
+      solution: this.solution,
       levels: []
     }
     if (this.custom) {

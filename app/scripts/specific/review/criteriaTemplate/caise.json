@@ -4,6 +4,7 @@
       "name": "Contribution",
       "group": "Criteria",
       "description": "contribution of the paper being reviewed to the collective body of knowledge",
+      "solution": "Sin solution",
       "levels": [
         {
           "name": "Strength",
@@ -24,6 +25,7 @@
       "name": "Paper's strengths",
       "group": "Criteria",
       "description": "the strengths of the paper being reviewed",
+      "solution": "Sin solution",
       "levels": [
         {
           "name": "Strength",
@@ -44,6 +46,7 @@
       "name": "Paper's weaknesses",
       "group": "Criteria",
       "description": "the weaknesses of the paper being reviewed",
+      "solution": "Sin solution",
       "levels": [
         {
           "name": "Strength",
@@ -64,6 +67,7 @@
       "name": "Overall evaluation",
       "group": "Criteria",
       "description": "a general assessment of the paper being reviewed",
+      "solution": "Sin solution",
       "levels": [
         {
           "name": "Strength",

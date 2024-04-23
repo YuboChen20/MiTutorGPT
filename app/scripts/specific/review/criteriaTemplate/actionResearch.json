@@ -4,6 +4,7 @@
       "name": "Research purpose",
       "group": "Essential",
       "description": "states a purpose, problem, objective, or research question",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -24,6 +25,7 @@
       "name": "Motivation",
       "group": "Essential",
       "description": "explains why the problem, objective, or research question is important (motivation)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -44,6 +46,7 @@
       "name": "Definitions",
       "group": "Essential",
       "description": "defines jargon, acronyms and key concepts",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -64,6 +67,7 @@
       "name": "Methodology",
       "group": "Essential",
       "description": "methodology is appropriate (not necessarily optimal) for stated purpose or questions",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -84,6 +88,7 @@
       "name": "Data collection",
       "group": "Essential",
       "description": "describes in detail what, where, when and how data were collected (see the Sampling Supplement)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -105,6 +110,7 @@
       "name": "Data analysis description",
       "group": "Essential",
       "description": "describes in detail how the data were analyzed",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -125,6 +131,7 @@
       "name": "Result presentation",
       "group": "Essential",
       "description": "present results",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -145,6 +152,7 @@
       "name": "Result addressing research",
       "group": "Essential",
       "description": "results directly address research questions",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -165,6 +173,7 @@
       "name": "Supported claims",
       "group": "Essential",
       "description": "supports main claims or conclusions with explicit evidence (data/observations) or arguments",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -185,6 +194,7 @@
       "name": "Results implications",
       "group": "Essential",
       "description": "discusses implications of the results",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -205,6 +215,7 @@
       "name": "Study limitations",
       "group": "Essential",
       "description": "discusses the study's limitations and threats to validity",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -225,6 +236,7 @@
       "name": "Contribution to BoK",
       "group": "Essential",
       "description": "contributes in some way to the collective body of knowledge",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -245,6 +257,7 @@
       "name": "Language misleading",
       "group": "Essential",
       "description": "language is not misleading; any grammatical problems do not substantially hinder understanding",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -265,6 +278,7 @@
       "name": "Benefit risk balance",
       "group": "Essential",
       "description": "balances the study's anticipated benefits with its potential risks or harms, minimizing risk or harm wherever possible (see the ethics supplements for studies with Human Participants or Secondary Data)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -285,6 +299,7 @@
       "name": "Visualizations",
       "group": "Essential",
       "description": "visualizations/graphs are not misleading (see the Information Visualization Supplement)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -305,6 +320,7 @@
       "name": "Related work synthesis",
       "group": "Desirable",
       "description": "summarizes and synthesizes a reasonable selection of related work",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -325,6 +341,7 @@
       "name": "Epistemological stance",
       "group": "Desirable",
       "description": "states epistemological stance (e.g. post-positivism, interpretivism, critical realism)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -345,6 +362,7 @@
       "name": "Statistical power/saturation",
       "group": "Desirable",
       "description": "appropriate statistical power (for quantitative work) or saturation (for qualitative work",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -365,6 +383,7 @@
       "name": "Limitations mitigation",
       "group": "Desirable",
       "description": "reasonable attempts to investigate or mitigate limitations",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -385,6 +404,7 @@
       "name": "Study realism",
       "group": "Desirable",
       "description": "discusses study’s realism, assumptions and sensitivity of the results to its realism/assumptions",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -425,6 +445,7 @@
       "name": "Open sharing",
       "group": "Desirable",
       "description": "openly shares data and materials to the extent possible within practical and ethical limits (see the Open Science Supplement)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -445,6 +466,7 @@
       "name": "Presentation",
       "group": "Desirable",
       "description": "concise, precise, well-organized and easy-to-read presentation",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -465,6 +487,7 @@
       "name": "Visualizations for argumentation",
       "group": "Desirable",
       "description": "visualizations (e.g. graphs, diagrams, tables) advance the paper’s arguments or contribution",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -485,6 +508,7 @@
       "name": "Researchers roles",
       "group": "Desirable",
       "description": "clarifies the roles and responsibilities of the researchers (i.e. who did what?)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -505,6 +529,7 @@
       "name": "Auto-reflection",
       "group": "Desirable",
       "description": "provides an auto-reflection or assessment of the authors’ own work (e.g. lessons learned)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -525,6 +550,7 @@
       "name": "Multiple raters use",
       "group": "Desirable",
       "description": "uses multiple raters for any subjective judgments (see the IRR/IRA Supplement)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -545,6 +571,7 @@
       "name": "Multiple data collection",
       "group": "Extraordinary",
       "description": "applies two or more data collection or analysis strategies to the same research question (see the Multimethodology Standard)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -565,6 +592,7 @@
       "name": "Multiple epistemological perspectives",
       "group": "Extraordinary",
       "description": "approaches the same research question(s) from multiple epistemological perspectives",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -584,6 +612,7 @@
       "name": "Research methodology innovation",
       "group": "Extraordinary",
       "description": "innovates on research methodology while completing an empirical study",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",

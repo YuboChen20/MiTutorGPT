@@ -92,6 +92,7 @@ class CustomCriteriasManager {
             this.createNewCustomCriteria({
               name: tagName,
               description: '',
+              solution: '', // Se añade la solución
               group: tagName,
               callback: () => {
                 window.abwa.sidebar.openSidebar()
@@ -116,6 +117,7 @@ class CustomCriteriasManager {
     return () => {
       let criteriaName
       let criteriaDescription
+      let solution // Add the solution variable
       Alerts.multipleInputAlert({
         title: 'Creating a new criterion for category ' + groupName,
         html: '<div>' +
@@ -123,11 +125,15 @@ class CustomCriteriasManager {
           '</div>' +
           '<div>' +
           '<textarea id="criteriaDescription" class="swal2-input customizeInput" placeholder="Type your criteria description..."></textarea>' +
+          '</div>' +
+          '<div>' +
+          '<textarea id="solution" class="swal2-input customizeInput" placeholder="Type your solution..."></textarea>' + // Add the solution input field
           '</div>',
         preConfirm: () => {
           // Retrieve values from inputs
           criteriaName = document.getElementById('criteriaName').value
           criteriaDescription = document.getElementById('criteriaDescription').value
+          solution = document.getElementById('solution').value // Assign the value of the solution input field to the solution variable
           // Find if criteria name already exists
           let currentTags = _.map(window.abwa.tagManager.currentTags, tag => tag.config.name)
           let criteriaExists = _.find(currentTags, tag => tag === criteriaName)
@@ -146,6 +152,7 @@ class CustomCriteriasManager {
               this.createNewCustomCriteria({
                 name: criteriaName,
                 description: criteriaDescription,
+                solution: solution, // Pass the solution variable to the createNewCustomCriteria function
                 group: groupName,
                 callback: () => {
                   window.abwa.sidebar.openSidebar()
@@ -158,10 +165,10 @@ class CustomCriteriasManager {
     }
   }
 
-  createNewCustomCriteria ({ name, description = 'Custom criteria', group, callback }) {
+  createNewCustomCriteria ({ name, description = 'Custom criteria', solution, group, callback }) {
     let review = new Review({ reviewId: '' })
     review.storageGroup = window.abwa.groupSelector.currentGroup
-    let criteria = new Criteria({ name, description, review, group: group, custom: true })
+    let criteria = new Criteria({ name, description, solution, review, group: group, custom: true })
     // Create levels for the criteria
     let levels = DefaultCriteria.defaultLevels
     criteria.levels = []
@@ -396,21 +403,21 @@ class CustomCriteriasManager {
       // Highlight criterion by LLM
       items['annotate'] = { name: 'Annotate' }
       // Assess criterion by LLM
-      items['compile'] = { name: 'Compile' }
+      // items['compile'] = { name: 'Compile' }
       // Find alternative viewpoints by LLM
-      items['alternative'] = { name: 'Provide viewpoints' }
+      // items['alternative'] = { name: 'Provide viewpoints' }
       // Find alternative viewpoints by LLM
-      items['recap'] = { name: 'Recap' }
+      // items['recap'] = { name: 'Recap' }
       $.contextMenu({
         selector: '[data-mark="' + tagGroup.config.name + '"]',
         build: () => {
           return {
             callback: (key) => {
               // Get latest version of tag
-              let currentTagGroup = _.find(window.abwa.tagManager.currentTags, currentTag => currentTag.config.annotation.id === tagGroup.config.annotation.id)
+              //  let currentTagGroup = _.find(window.abwa.tagManager.currentTags, currentTag => currentTag.config.annotation.id === tagGroup.config.annotation.id)
               if (key === 'annotate') {
                 this.annotate(criterion, description)
-              } else if (key === 'compile') {
+              } /* else if (key === 'compile') {
                 this.getParagraphs(criterion, (paragraphs) => {
                   if (paragraphs) {
                     CustomCriteriasManager.compile(criterion, description, paragraphs, currentTagGroup.config.annotation)
@@ -421,7 +428,7 @@ class CustomCriteriasManager {
                     })
                   }
                 })
-              } else if (key === 'alternative') {
+              }  else if (key === 'alternative') {
                 this.getParagraphs(criterion, (paragraphs) => {
                   if (paragraphs) {
                     CustomCriteriasManager.alternative(criterion, description, paragraphs, currentTagGroup.config.annotation)
@@ -434,7 +441,7 @@ class CustomCriteriasManager {
                 })
               } else if (key === 'recap') {
                 CustomCriteriasManager.recap(currentTagGroup)
-              }
+              } */
             },
             items: items
           }
@@ -500,11 +507,13 @@ class CustomCriteriasManager {
     })
   }
 
-  static modifyCriteriaHandler (tagGroup, defaultNameValue = null, defaultDescriptionValue = null) {
+  static modifyCriteriaHandler (tagGroup, defaultNameValue = null, defaultDescriptionValue = null, defaultSolutionValue = null) { // Se agrega defaultSolutionValue como parámetro
     let criteriaName
     let criteriaDescription
+    let solution // Se añade variable para capturar el valor de Solution
     let formCriteriaNameValue = defaultNameValue || tagGroup.config.name
     let formCriteriaDescriptionValue = defaultDescriptionValue || tagGroup.config.options.description
+    let formSolutionValue = defaultSolutionValue || tagGroup.config.options.solution // Se inicializa el valor de formSolutionValue
     let custom = tagGroup.config.options.custom || false
     Alerts.threeOptionsAlert({
       title: 'Modifying name and description for criterion ' + formCriteriaNameValue,
@@ -513,19 +522,24 @@ class CustomCriteriasManager {
         '</div>' +
         '<div>' +
         '<textarea id="criteriaDescription" class="swal2-input customizeInput" placeholder="Description">' + formCriteriaDescriptionValue + '</textarea>' +
+        '</div>' +
+        '<div>' + // Se corrige la etiqueta de cierre incorrecta
+        '<textarea id="solution" class="swal2-input customizeInput" placeholder="Solution">' + formSolutionValue + '</textarea>' + // Se asegura de utilizar 'solution' como ID
         '</div>',
       preConfirm: () => {
         // Retrieve values from inputs
         criteriaName = document.getElementById('criteriaName').value
         criteriaDescription = document.getElementById('criteriaDescription').value
+        solution = document.getElementById('solution').value // Se captura el valor de Solution
       },
       callback: () => {
         // Revise to execute only when OK button is pressed or criteria name and descriptions are not undefined
-        if (!_.isUndefined(criteriaName) && !_.isUndefined(criteriaDescription)) {
+        if (!_.isUndefined(criteriaName) && !_.isUndefined(criteriaDescription) && !_.isUndefined(solution)) { // Se verifica también que solution no sea undefined
           CustomCriteriasManager.modifyCriteria({
             tagGroup: tagGroup,
             name: criteriaName,
             description: criteriaDescription,
+            solution: solution, // Se pasa solution a modifyCriteria
             custom,
             callback: (err) => {
               if (err) {
@@ -549,39 +563,44 @@ class CustomCriteriasManager {
     })
   }
 
-  static modifyCriteria ({ tagGroup, name, description, custom = true, group, callback }) {
+  static modifyCriteria ({ tagGroup, name, description, solution, custom = true, group, callback }) {
     // Check if name has changed
     if (name === tagGroup.config.name || _.isUndefined(name)) {
+      name = name || tagGroup.config.name
       // Check if description has changed
       if (description !== tagGroup.config.options.description || _.isUndefined(description)) {
-        name = name || tagGroup.config.name
         description = description || tagGroup.config.options.description
-        // Update annotation description
-        let oldAnnotation = tagGroup.config.annotation
-        // Create new annotation
-        let review = new Review({ reviewId: '' })
-        review.storageGroup = window.abwa.groupSelector.currentGroup
-        let criteria = new Criteria({
-          name,
-          description,
-          group: group || tagGroup.config.options.group,
-          review,
-          custom: custom
-        })
-        let annotation = criteria.toAnnotation()
-        window.abwa.storageManager.client.updateAnnotation(oldAnnotation.id, annotation, (err, annotation) => {
-          if (err) {
-            // TODO Show err
-            if (_.isFunction(callback)) {
-              callback(err)
-            }
-          } else {
-            if (_.isFunction(callback)) {
-              callback()
-            }
-          }
-        })
+        // Check if solution has changed
+        if (solution !== tagGroup.config.options.solution || _.isUndefined(solution)) {
+          solution = solution || tagGroup.config.options.solution
+          // Update annotation description and solution
+        }
       }
+      let oldAnnotation = tagGroup.config.annotation
+      // Create new annotation
+      let review = new Review({ reviewId: '' })
+      review.storageGroup = window.abwa.groupSelector.currentGroup
+      let criteria = new Criteria({
+        name,
+        description,
+        solution,
+        group: group || tagGroup.config.options.group,
+        review,
+        custom: custom
+      })
+      let annotation = criteria.toAnnotation()
+      window.abwa.storageManager.client.updateAnnotation(oldAnnotation.id, annotation, (err, annotation) => {
+        if (err) {
+          // TODO Show err
+          if (_.isFunction(callback)) {
+            callback(err)
+          }
+        } else {
+          if (_.isFunction(callback)) {
+            callback()
+          }
+        }
+      })
     } else {
       // If name has changed, check if there is not other criteria with the same value
       if (CustomCriteriasManager.alreadyExistsThisCriteriaName(name)) {
@@ -590,7 +609,7 @@ class CustomCriteriasManager {
           title: 'Criteria already exists',
           text: 'A criteria with the name ' + name + ' already exists.',
           callback: () => {
-            this.modifyCriteriaHandler(tagGroup, name, description)
+            this.modifyCriteriaHandler(tagGroup, name, description, solution)
           }
         })
       } else {
@@ -631,6 +650,7 @@ class CustomCriteriasManager {
               let criteria = new Criteria({
                 name,
                 description,
+                solution,
                 group: tagGroup.config.options.group,
                 review,
                 custom: custom

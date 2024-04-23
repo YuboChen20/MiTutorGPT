@@ -4,6 +4,7 @@
       "group": "Essential",
       "name": "Research purpose",
       "description": "states a purpose, problem, objective, or research question",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -24,6 +25,7 @@
       "group": "Essential",
       "name": "Motivation",
       "description": "explains why the problem, objective, or research question is important (motivation)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -44,6 +46,7 @@
       "group": "Essential",
       "name": "Artifact description",
       "description": "describes the proposed artifact in adequate detail",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -64,6 +67,7 @@
       "name": "Evaluation",
       "group": "Essential",
       "description": "Empirically evaluates the proposed artifact using:\naction research, in which the researchers intervene a real organization using the artifact,\na case study in which a real organization uses the artifact without researcher intervention,\na controlled experiment in which human participants use the artifact,\na simulation in which the artifact is used in an artificial environment, or\nanother method for which a clear and convincing rationale is provided",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -84,6 +88,7 @@
       "group": "Essential",
       "name": "Result addressing research",
       "description": "results directly address research questions",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -104,6 +109,7 @@
       "group": "Essential",
       "name": "Study limitations",
       "description": "discusses the study's limitations and threats to validity",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -124,6 +130,7 @@
       "group": "Desirable",
       "name": "Related work synthesis",
       "description": "summarizes and synthesizes a reasonable selection of related work",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -144,6 +151,7 @@
       "group": "Desirable",
       "name": "Relation with related work",
       "description": "clearly describes relationship between contribution(s) and related work",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -164,6 +172,7 @@
       "group": "Desirable",
       "name": "Recommendation providing",
       "description": "provides plausibly useful interpretations or recommendations for practice, education or research",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -184,6 +193,7 @@
       "group": "Desirable",
       "name": "Open sharing",
       "description": "openly shares data and materials to the extent possible within practical and ethical limits (see the Open Science Supplement)",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -204,6 +214,7 @@
       "name": "Contribution",
       "description": "contributes in some way to the collective body of knowledge",
       "group": "Extraordinary",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -224,6 +235,7 @@
       "group": "Extraordinary",
       "name": "Methodology",
       "description": "methodology is appropriate (not necessarily optimal) for stated purpose or questions",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -244,6 +256,7 @@
       "group": "Extraordinary",
       "name": "Data analysis description",
       "description": "describes in detail how the data were analyzed",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",
@@ -264,6 +277,7 @@
       "group": "Extraordinary",
       "name": "Research methodology innovation",
       "description": "innovates on research methodology while completing an empirical study",
+      "solution": "Sin solucion",
       "levels": [
         {
           "name": "Strength",

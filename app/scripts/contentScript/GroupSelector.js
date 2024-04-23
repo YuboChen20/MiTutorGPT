@@ -620,7 +620,7 @@ class GroupSelector {
           groupName = LanguageUtils.normalizeString(groupName)
           window.abwa.storageManager.client.updateGroup(group.id, {
             name: groupName,
-            description: group.description || 'A Review&Go group to conduct a review'
+            description: group.description + 'hhhh' || 'A Review&Go group to conduct a review'
           }, callback)
         }
       }
