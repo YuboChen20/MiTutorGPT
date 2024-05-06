@@ -808,7 +808,6 @@ class CustomCriteriasManager {
     }
   }
 
-
   static compile (criterion, description, paragraphs, annotation) {
     if (description.length < 20) {
       Alerts.infoAlert({ text: 'You have to provide a description for the given criterion' })

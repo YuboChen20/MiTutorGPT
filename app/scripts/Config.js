@@ -28,7 +28,7 @@ const Config = {
     '"explanation": "[Explanation of why it is wrong]"\n' +
     '},...\n' +
     ']\n' +
-    '}\n' + 
+    '}\n' +
     'When using this prompt, replace the placeholders with the current content of the excercise and the specific description and solution.\n',
     compilePrompt: 'Research Paper Context: [The research paper is provided above]\n' +
       'Criterion for Evaluation: [C_NAME]\n' +
