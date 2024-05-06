@@ -8,5 +8,10 @@
     "crypto": true
   },
   "parser": "babel-eslint",
-  "plugins": ["jasmine"]
+  "plugins": ["jasmine"],
+  "rules": {
+    "node/no-missing-require": ["error", {
+      "allowModules": ["fs", "http", "https", "url"]
+    }]
+  }
 }

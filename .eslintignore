@@ -1,0 +1,4 @@
+node_modules/
+dist/
+*.pdf.worker.js
+*.pdf.js

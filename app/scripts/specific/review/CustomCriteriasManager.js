@@ -682,7 +682,7 @@ class CustomCriteriasManager {
     return s.substring(0, startIdx) + s.substring(endIdx + end.length)
   }
 
-  annotate (criterion, description) {
+  annotate (criterion, description, solution) {
     if (description.length < 20) {
       Alerts.infoAlert({ text: 'You have to provide a description for the given criterion' })
     } else {
@@ -710,19 +710,19 @@ class CustomCriteriasManager {
               }, ({ apiKey }) => {
                 let callback = (json) => {
                   // let comment = json.comment
-                  // let sentiment = json.sentiment
                   let annotations = []
                   for (let i = 0; i < json.excerpts.length; i += 1) {
                     let excerptElement = json.excerpts[i]
                     let excerpt = ''
-                    let sentiment = 'not met'
+                    let explanation = ''
                     if (excerptElement && excerptElement.text) {
                       excerpt = excerptElement.text
                     }
-                    if (excerptElement && excerptElement.sentiment) {
-                      sentiment = excerptElement.sentiment.toLowerCase()
+                    if (excerptElement && excerptElement.explanation) {
+                      explanation = excerptElement.explanation.toLowerCase()
                     }
                     let selectors = this.getSelectorsFromLLM(excerpt, documents)
+                    console.log(selectors)
                     let annotation = {
                       paragraph: excerpt,
                       selectors: selectors
@@ -730,8 +730,8 @@ class CustomCriteriasManager {
                     annotations.push(annotation)
                     if (selectors.length > 0) {
                       let commentData = {
-                        comment: '',
-                        sentiment: sentiment,
+                        comment: explanation,
+                        explanation: explanation,
                         llm: llm,
                         paragraph: excerpt
                       }
@@ -773,10 +773,11 @@ class CustomCriteriasManager {
                     if (!prompt) {
                       prompt = Config.prompts.annotatePrompt
                     }
-                    prompt = prompt.replaceAll('[C_DESCRIPTION]', description).replaceAll('[C_NAME]', criterion)
+                    prompt = prompt.replaceAll('[C_DESCRIPTION]', description).replaceAll('[C_NAME]', criterion).replaceAll('[C_SOLUTION]', solution)
                     let params = {
                       criterion: criterion,
                       description: description,
+                      solution: solution,
                       apiKey: apiKey,
                       documents: documents,
                       callback: callback,
@@ -806,6 +807,7 @@ class CustomCriteriasManager {
       })
     }
   }
+
 
   static compile (criterion, description, paragraphs, annotation) {
     if (description.length < 20) {

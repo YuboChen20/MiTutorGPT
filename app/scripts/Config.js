@@ -13,27 +13,23 @@ const Config = {
     }
   },
   prompts: {
-    annotatePrompt: 'Research Paper Context: [The research paper is provided above]\n' +
-      'Criterion for Evaluation: [C_NAME]\n' + 'Criterion Description: [C_DESCRIPTION]\n' +
-      'Based on the above, please analyze the full research paper and generate a JSON response (Do not consider the abstract). The JSON should list THREE text excerpts of the paper, but not from paper\'s abstract,  that are associated with the criterion for evaluation and indicate whether it meets the specified criterion ("Met"), (“Partially Met”) or not ("Not Met"). The excerpts should come to the point and be quite brief, so be thrifty. The format should be as follows:\n' +
-      '{\n' +
-      '"name": "[Criterion Name]",\n' +
-      '"excerpts": [\n' +
-      '{\n' +
-      '"text": "[Text of the first significant paragraph]",\n' +
-      '"sentiment": "[Met/Partially Met/Not met]"\n' +
-      '},\n' +
-      '{\n' +
-      '"text": "[Text of the second significant paragraph]",\n' +
-      '"sentiment": "[Met/Partially met/Not met]"\n' +
-      '},\n' +
-      '{\n' +
-      '"text": "[Text of the third significant paragraph]",\n' +
-      '"sentiment": "[Met/Partially met/Not met]"\n' +
-      '},\n' +
-      ']\n' +
-      '}\n' +
-      'When using this prompt, replace the placeholders with the actual content of the research paper and the specific criterion details.\n',
+    annotatePrompt: 'Exercise : [The number of de exercise ]\n' +
+    'Exercise: [C_Name]\n' + 'Exercise description: [C_DESCRIPTION]\n' + 'Solution : [C_SOLUTION]\n' +
+    'Based on the above, please analyze the full exercise and generate a JSON response (Do not consider the abstract). The JSON should list (0 or more) wrong answers, but not from paper\'s abstract,  that are associated with the solution and indicate why they are wrong ("explanatin")(Only wrong answers). The excerpts should come to the point and be quite brief, so be thrifty. The format should be as follows:\n' +
+    '{\n' +
+    '"name": "[Exercise Name]",\n' +
+    '"excerpts": [\n' +
+    '{\n' +
+    '"text": "[Sub exercise and its answer (the wrong one)]",\n' +
+    '"explanation": "[Explanation of why it is wrong]"\n' +
+    '},\n' +
+    '{\n' +
+    '"text": "[Sub exercise and its answer (the wrong one)]",\n' +
+    '"explanation": "[Explanation of why it is wrong]"\n' +
+    '},...\n' +
+    ']\n' +
+    '}\n' + 
+    'When using this prompt, replace the placeholders with the current content of the excercise and the specific description and solution.\n',
     compilePrompt: 'Research Paper Context: [The research paper is provided above]\n' +
       'Criterion for Evaluation: [C_NAME]\n' +
       'Criterion Description: [C_DESCRIPTION]\n' +
