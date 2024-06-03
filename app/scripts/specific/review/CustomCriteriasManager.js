@@ -399,9 +399,12 @@ class CustomCriteriasManager {
       let tagGroup = arrayOfTagGroups[i]
       let criterion = tagGroup.config.name
       let description = tagGroup.config.options.description
+      let solution = tagGroup.config.options.solution
       let items = {}
-      // Highlight criterion by LLM
-      items['annotate'] = { name: 'Annotate' }
+      // Correct the exercise by LLM
+      items['annotate'] = { name: 'Correct' }
+      // Solve exercise by LLM
+      items['solve'] = { name: 'Solve' }
       // Assess criterion by LLM
       // items['compile'] = { name: 'Compile' }
       // Find alternative viewpoints by LLM
@@ -414,10 +417,13 @@ class CustomCriteriasManager {
           return {
             callback: (key) => {
               // Get latest version of tag
-              //  let currentTagGroup = _.find(window.abwa.tagManager.currentTags, currentTag => currentTag.config.annotation.id === tagGroup.config.annotation.id)
+              let currentTagGroup = _.find(window.abwa.tagManager.currentTags, currentTag => currentTag.config.annotation.id === tagGroup.config.annotation.id)
               if (key === 'annotate') {
-                this.annotate(criterion, description)
-              } /* else if (key === 'compile') {
+                this.annotate(criterion, description, solution)
+              } else if (key === 'solve') {
+                CustomCriteriasManager.solve(criterion, description, currentTagGroup)
+              }
+              /* else if (key === 'compile') {
                 this.getParagraphs(criterion, (paragraphs) => {
                   if (paragraphs) {
                     CustomCriteriasManager.compile(criterion, description, paragraphs, currentTagGroup.config.annotation)
@@ -460,7 +466,7 @@ class CustomCriteriasManager {
         buttonText = 'OK'
       }
       Alerts.infoAlert({
-        title: 'The LLM suggests this information for ' + criterion,
+        title: 'The LLM suggests you add in your solution of ' + criterion,
         text: annotation.paragraph,
         confirmButtonText: buttonText,
         showCancelButton: false,
@@ -686,7 +692,6 @@ class CustomCriteriasManager {
     if (description.length < 20) {
       Alerts.infoAlert({ text: 'You have to provide a description for the given criterion' })
     } else {
-      // this.modifyCriteriaHandler(currentTagGroup)
       chrome.runtime.sendMessage({ scope: 'llm', cmd: 'getSelectedLLM' }, async ({ llm }) => {
         if (llm === '') {
           llm = Config.review.defaultLLM
@@ -778,6 +783,98 @@ class CustomCriteriasManager {
                       criterion: criterion,
                       description: description,
                       solution: solution,
+                      apiKey: apiKey,
+                      documents: documents,
+                      callback: callback,
+                      prompt: prompt,
+                      selectedLLM
+                    }
+                    if (selectedLLM === 'anthropic') {
+                      AnthropicManager.askCriteria(params)
+                    } else if (selectedLLM === 'openAI') {
+                      OpenAIManager.askCriteria(params)
+                    }
+                  })
+                } else {
+                  let callback = () => {
+                    window.open(chrome.runtime.getURL('pages/options.html'))
+                  }
+                  Alerts.infoAlert({
+                    text: 'Please, configure your LLM.',
+                    title: 'Please select a LLM and provide your API key',
+                    callback: callback()
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
+    }
+  }
+
+  static solve (criterion, description, tagGroup) {
+    if (description.length < 20) {
+      Alerts.infoAlert({ text: 'You have to provide a description for the given criterion' })
+    } else {
+      // this.modifyCriteriaHandler(currentTagGroup)
+      chrome.runtime.sendMessage({ scope: 'llm', cmd: 'getSelectedLLM' }, async ({ llm }) => {
+        if (llm === '') {
+          llm = Config.review.defaultLLM
+        }
+        if (llm && llm !== '') {
+          let selectedLLM = llm
+          Alerts.confirmAlert({
+            title: 'Solve exercise: ' + criterion,
+            text: 'Do you want to solve this exercise using ' + llm.charAt(0).toUpperCase() + llm.slice(1) + '?',
+            cancelButtonText: 'Cancel',
+            callback: async () => {
+              let documents = []
+              documents = await LLMTextUtils.loadDocument()
+              if (documents[0].pageContent.includes('Abstract') && documents[0].pageContent.includes('Keywords')) {
+                documents[0].pageContent = this.removeTextBetween(documents[0].pageContent, 'Abstract', 'Keywords')
+              }
+              chrome.runtime.sendMessage({
+                scope: 'llm',
+                cmd: 'getAPIKEY',
+                data: selectedLLM
+              }, ({ apiKey }) => {
+                let callback = (json) => {
+                  // let comment = json.comment
+                  let solution = json.solutions
+                  console.log('hola1')
+                  let custom = tagGroup.config.options.custom || false
+                  if (!_.isUndefined(criterion) && !_.isUndefined(description) && !_.isUndefined(solution)) { // Se verifica también que solution no sea undefined
+                    console.log('hola2')
+                    CustomCriteriasManager.modifyCriteria({
+                      tagGroup: tagGroup,
+                      name: criterion,
+                      description: description,
+                      solution: solution, // Se pasa solution a modifyCriteria
+                      custom,
+                      callback: (err) => {
+                        if (err) {
+                          Alerts.errorAlert({ text: 'Unable to update criteria. Error:<br/>' + err.message })
+                        } else {
+                          window.abwa.tagManager.reloadTags(() => {
+                            window.abwa.contentAnnotator.updateAllAnnotations(() => {
+                              window.abwa.sidebar.openSidebar()
+                            })
+                          })
+                        }
+                      }
+                    })
+                  }
+                }
+                if (apiKey && apiKey !== '') {
+                  chrome.runtime.sendMessage({ scope: 'prompt', cmd: 'getPrompt', data: {type: 'solvePrompt'} }, ({ prompt }) => {
+                    if (!prompt) {
+                      prompt = Config.prompts.solvePrompt
+                    }
+                    prompt = prompt.replaceAll('[C_DESCRIPTION]', description).replaceAll('[C_NAME]', criterion)
+                    let params = {
+                      criterion: criterion,
+                      description: description,
                       apiKey: apiKey,
                       documents: documents,
                       callback: callback,
@@ -981,7 +1078,7 @@ class CustomCriteriasManager {
       selectors.push(fragmentSelector)
       // let pageContent = LLMTextUtils.getPageContent(pageNumber)
       let page = documents.find(document => document.metadata.loc.pageNumber === pageNumber)
-      let pageContent = page.pageContent
+      let pageContent = page.pageContent.replaceAll('\n', ' ')
       let index = LLMTextUtils.getIndexesOfParagraph(pageContent, paragraph)
       let textPositionSelector = {
         type: 'TextPositionSelector',

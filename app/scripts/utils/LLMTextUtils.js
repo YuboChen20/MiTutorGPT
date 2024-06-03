@@ -37,6 +37,36 @@ class LLMTextUtils {
     return documents
   }
 
+  static async loadDocumentForSchema (pdf) {
+    const meta = await pdf.getMetadata().catch(() => null)
+    const documents = []
+    for (let i = 1; i <= pdf.numPages; i += 1) {
+      const page = await pdf.getPage(i)
+      const content = await page.getTextContent()
+      if (content.items.length === 0) {
+        continue
+      }
+      const text = content.items
+        .map((item) => item.str)
+        .join('\n')
+      documents.push(new Document({
+        pageContent: text,
+        metadata: {
+          pdf: {
+            version: meta?.PDFFormatVersion,
+            info: meta?.info,
+            metadata: meta?.metadata,
+            totalPages: pdf.numPages
+          },
+          loc: {
+            pageNumber: i
+          }
+        }
+      }))
+    }
+    return documents
+  }
+
   static async textToDocument (text) {
     const documents = []
     documents.push(new Document({
@@ -97,8 +127,22 @@ class LLMTextUtils {
    */
   static getIndexesOfParagraph (pageContent, paragraph) {
     let strList = paragraph.split(' ')
-    for (let i = 0; i < strList.length - 3; i += 1) {
+    for (let i = 0; i <= strList.length - 3; i += 1) {
       let paragraphBegin = strList[i] + ' ' + strList[i + 1] + ' ' + strList[i + 2]
+      let index = pageContent.toLowerCase().indexOf(paragraphBegin.toLowerCase(), 0)
+      if (index > -1) {
+        return index
+      }
+    }
+    let paragraphBegin
+    if (strList.length === 1) {
+      paragraphBegin = strList[0]
+      let index = pageContent.toLowerCase().indexOf(paragraphBegin.toLowerCase(), 0)
+      if (index > -1) {
+        return index
+      }
+    } else if (strList.length === 2) {
+      paragraphBegin = strList[0] + ' ' + strList[1]
       let index = pageContent.toLowerCase().indexOf(paragraphBegin.toLowerCase(), 0)
       if (index > -1) {
         return index

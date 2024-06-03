@@ -13,23 +13,78 @@ const Config = {
     }
   },
   prompts: {
-    annotatePrompt: 'Exercise : [The number of de exercise ]\n' +
-    'Exercise: [C_Name]\n' + 'Exercise description: [C_DESCRIPTION]\n' + 'Solution : [C_SOLUTION]\n' +
-    'Based on the above, please analyze the full exercise and generate a JSON response (Do not consider the abstract). The JSON should list (0 or more) wrong answers, but not from paper\'s abstract,  that are associated with the solution and indicate why they are wrong ("explanatin")(Only wrong answers). The excerpts should come to the point and be quite brief, so be thrifty. The format should be as follows:\n' +
+    annotatePrompt:
+    'Exercise: [C_NAME]\n' + 'Exercise description: [C_DESCRIPTION]\n' + 'Solution provided : [C_SOLUTION]\n' +
+    'Based on the above, please analyze the full XML exercise and generate a JSON response (Do not consider the abstract).\n ' +
+    'The JSON should list every wrong XML answers, but not from paper\'s abstract.\n' +
+    'If all is correct, create an empty json.\n' +
+    'To correct an xml, first check if the root of the xml is set correctly (xmlns, schemalocation and etc.). Then you check the elements inside . \n' +
+    'If the solution has an answer that does not appear in the document, the variable "text" must contain the place where the solution should appear.\n' +
+    'Compare with the solution provided and description, then indicate where it is wrong and why. You do not have to include solutions that do not come from the solution provided. Save you  response in these variables (text, explanation). The excerpts should come to the point and be quite brief, so be thrifty. The format should be as follows:\n' +
     '{\n' +
-    '"name": "[Exercise Name]",\n' +
+    '"name": "[Exercise Name,]",\n' +
     '"excerpts": [\n' +
     '{\n' +
-    '"text": "[Sub exercise and its answer (the wrong one)]",\n' +
-    '"explanation": "[Explanation of why it is wrong]"\n' +
+    '"text": "[Write here the part of the document(DOM) that is wrong, according to the solution (at most 25 words))]",\n' +
+    '"explanation": "[Explains how to correct it]"\n' +
     '},\n' +
     '{\n' +
-    '"text": "[Sub exercise and its answer (the wrong one)]",\n' +
-    '"explanation": "[Explanation of why it is wrong]"\n' +
-    '},...\n' +
+    '"text": "[Write here the part of the document(DOM) that is wrong, according to the solution (at most 25 words))]",\n' +
+    '"explanation": "[Explains how to correct it]"\n' +
+    '} ...(could be more)\n' +
     ']\n' +
     '}\n' +
+    '.\n' +
     'When using this prompt, replace the placeholders with the current content of the excercise and the specific description and solution.\n',
+    solvePrompt:
+    'Exercise: [C_Name]\n' + 'Exercise description: [C_DESCRIPTION]\n' +
+    'Based on the above, please solve the full exercise and generate a JSON response (Do not consider the abstract). The JSON should contain the solution of the exercise, but not from paper\'s abstract, i need  only the solution, its no neccesary explanation. The excerpts should come to the point and be quite brief, so be thrifty. The format should be as follows:\n' +
+    '{\n' +
+    '"name": "[Exercise Name]",\n' +
+    '"solutions": "[solutions of the exercise, with their statement]"' +
+    '}\n' +
+    'When using this prompt, replace the placeholders with the current content of the excercise and the specific description.\n' +
+    'Don\'t add more square bracket.\n',
+    importPrompt:
+    'Transforms the exercises in the document(html) into a Json (Do not consider the abstract). The JSON should list every exercise, but not from paper\'s abstract. The format should be as follows:\n' +
+    '{\n' +
+    '"criteria": [' +
+    '{\n' +
+    '"name": "[Exercise name, more than 3 characters]",' +
+    '"group": "[Category or statement of exercise]",' +
+    '"description": "[content of the exercise as is]",' +
+    '"solution": "[The full solution of the exercise, in case you have, if not, put empty]",' +
+    '"levels": [],' +
+    '"custom": true' +
+    '},\n' +
+    '{\n' +
+    '"name": "[Exercise name, more than 3 characters]",' +
+    '"group": "[Category or statement of exercise]",' +
+    '"description": "[content of the exercise as is ]",' +
+    '"solution": "[The full solution of the exercise, in case you have, if not, put empty]",' +
+    '"levels": [],' +
+    '"custom": true' +
+    '}...\n' +
+    ']\n' +
+    '"defaultLevels": [' +
+    '{\n' +
+    '"name": "Strength",' +
+    '"description": ""' +
+    '}, \n' +
+    '{\n' +
+    '"name": "Minor weakness",' +
+    '"description": ""' +
+    '}, \n' +
+    '{\n' +
+    '"name": "Major weakness",' +
+    '"description": ""' +
+    '} \n' +
+    ']\n' +
+    '}\n' +
+    'Don\'t touch defaultLevels, only add the exercises in the criteria array.\n' +
+    'When using this prompt, replace the placeholders with the current content of the excercise and the specific description.\n' +
+    'Don\'t add more square bracket.\n' +
+    'The solutions to the exercises are below,copy the whole solution and put it in json .\n',
     compilePrompt: 'Research Paper Context: [The research paper is provided above]\n' +
       'Criterion for Evaluation: [C_NAME]\n' +
       'Criterion Description: [C_DESCRIPTION]\n' +
@@ -57,7 +112,7 @@ const Config = {
     socialJudgePrompt: 'Is it socially appropriate to say the following text? <text>[C_EXCERPT]<text> as important.' +
       ' You have to provide the response in JSON format with' +
       ' the following keys: -"name" (contains the criteria name), -"answer" (the answer to the question. all the content must be specified in the answer key, without creating keys inside),',
-    clarifyPrompt: 'I asked you to assess the following criterion for the provided research paper <criterion>[C_NAME]</criterion> and your considered the text excerpt found in triple quoted text <criterion>[C_EXCERPT]</criterion> as important. Therefore, now I would like to ask you [C_QUESTION]?' +
+    clarifyPrompt: 'Based on your last saved answer: [C_COMMENT], from exercise: [C_NAME] and your considered the text excerpt found in triple quoted text <criterion>[C_EXCERPT]</criterion> as important. Therefore, now I would like to ask you [C_QUESTION]?' +
       ' You have to provide the response only in JSON format with a single key, which is answer' +
       ' the following keys: -"answer" (the answer to the question. all the content must be specified in the answer key, without creating keys inside),' +
       ' do not add more text to your answer apart from the json with the answer in the "answer key"'

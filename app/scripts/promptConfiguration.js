@@ -38,6 +38,64 @@ class PromptConfiguration {
       }
     })
 
+    // SOLVE PROMPT
+    const solveDefaultPrompt = Config.prompts.solvePrompt
+    document.querySelector('#solvePromptButton').addEventListener('click', () => {
+      let messageLabel = document.querySelector('#solvePromptMessage')
+      this.setPrompt('solvePrompt', solveDefaultPrompt)
+      let currentPrompt = document.querySelector('#solvePrompt')
+      currentPrompt.value = solveDefaultPrompt
+      messageLabel.innerHTML = 'Prompt saved'
+    })
+
+    document.querySelector('#solvePromptSaveButton').addEventListener('click', () => {
+      let currentPrompt = document.querySelector('#solvePrompt').value
+      let messageLabel = document.querySelector('#solvePromptMessage')
+      if (this.checkSolvePrompt(currentPrompt)) {
+        this.setPrompt('solvePrompt', currentPrompt)
+      } else {
+        messageLabel.innerHTML = 'Invalid prompt'
+      }
+    })
+
+    chrome.runtime.sendMessage({ scope: 'prompt', cmd: 'getPrompt', data: {type: 'solvePrompt'} }, ({ prompt }) => {
+      if (prompt && prompt !== '') {
+        document.querySelector('#solvePrompt').value = prompt
+      } else {
+        document.querySelector('#solvePrompt').value = solveDefaultPrompt
+        this.setPrompt('solvePrompt', solveDefaultPrompt)
+      }
+    })
+
+    // IMPORT PROMPT
+    const importDefaultPrompt = Config.prompts.importPrompt
+    document.querySelector('#importPromptButton').addEventListener('click', () => {
+      let messageLabel = document.querySelector('#importPromptMessage')
+      this.setPrompt('importPrompt', importDefaultPrompt)
+      let currentPrompt = document.querySelector('#importPrompt')
+      currentPrompt.value = importDefaultPrompt
+      messageLabel.innerHTML = 'Prompt saved'
+    })
+
+    document.querySelector('#importPromptSaveButton').addEventListener('click', () => {
+      let currentPrompt = document.querySelector('#importPrompt').value
+      let messageLabel = document.querySelector('#importPromptMessage')
+      if (this.checkImportPrompt(currentPrompt)) {
+        this.setPrompt('importPrompt', currentPrompt)
+      } else {
+        messageLabel.innerHTML = 'Invalid prompt'
+      }
+    })
+
+    chrome.runtime.sendMessage({ scope: 'prompt', cmd: 'getPrompt', data: {type: 'importPrompt'} }, ({ prompt }) => {
+      if (prompt && prompt !== '') {
+        document.querySelector('#importPrompt').value = prompt
+      } else {
+        document.querySelector('#importPrompt').value = solveDefaultPrompt
+        this.setPrompt('importPrompt', importDefaultPrompt)
+      }
+    })
+
     // COMPILE PROMPT
     const compileDefaultPrompt = Config.prompts.compilePrompt
     document.querySelector('#compilePromptButton').addEventListener('click', () => {
@@ -200,6 +258,22 @@ class PromptConfiguration {
   }
 
   checkAnnotatePrompt (prompt) {
+    if (prompt.includes('[C_DESCRIPTION]') && prompt.includes('[C_NAME]')) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  checkSolvePrompt (prompt) {
+    if (prompt.includes('[C_DESCRIPTION]') && prompt.includes('[C_NAME]')) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  checkImportPrompt (prompt) {
     if (prompt.includes('[C_DESCRIPTION]') && prompt.includes('[C_NAME]')) {
       return true
     } else {

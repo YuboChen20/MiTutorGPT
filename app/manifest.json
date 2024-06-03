@@ -17,7 +17,7 @@
   "content_scripts": [
     {
       "matches": ["file:///*/*"],
-      "js": ["scripts/contentScript.js"],
+      "js": ["scripts/contentScript.js","content/pdfjs/build/pdf.js"],
       "css": ["styles/contentScript.css"],
       "run_at": "document_start",
       "all_frames": false

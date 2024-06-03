@@ -1,10 +1,14 @@
 import Alerts from '../../utils/Alerts'
 import FileUtils from '../../utils/FileUtils'
+import LLMTextUtils from '../../utils/LLMTextUtils'
 import general from './criteriaTemplate/general.json'
 import engineering from './criteriaTemplate/engineering.json'
 import caise from './criteriaTemplate/caise.json'
 import basic from './criteriaTemplate/basic.json'
 import actionResearch from './criteriaTemplate/actionResearch.json'
+import AnthropicManager from '../../llm/anthropic/AnthropicManager'
+import OpenAIManager from '../../llm/openAI/OpenAIManager'
+import Config from '../../Config'
 
 class ImportSchema {
   static createConfigurationAnnotationsFromReview ({review, callback}) {
@@ -36,7 +40,7 @@ class ImportSchema {
    * Ask user for a configuration file in JSON and it returns a javascript object with the configuration
    * @param callback
    */
-  static askUserForConfigurationSchema (callback) {
+  static askUserForConfigurationSchema2 (callback) {
     // Ask user to upload the file
     Alerts.inputTextAlert({
       title: 'Upload your configuration file',
@@ -56,6 +60,107 @@ class ImportSchema {
           })
         }
       }
+    })
+  }
+
+  static askUserForConfigurationSchema (callback) {
+    // Ask user to upload the file
+    Alerts.inputTextAlert({
+      title: 'Upload your configuration file',
+      html: 'Here you can upload your PDF file with the configuration for the CoReviewer highlighter.',
+      input: 'file',
+      callback: (err, file) => {
+        if (err) {
+          window.alert('An unexpected error happened when trying to load the alert.')
+        } else {
+          const url = URL.createObjectURL(file)
+          fetch(url)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => {
+              ImportSchema.convertPDFToDOM(arrayBuffer)
+                .then(json => {
+                  callback(null, json)
+                })
+                .catch(error => {
+                  callback(new Error('Unable to convert PDF to JSON: ' + error.message))
+                })
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => URL.revokeObjectURL(url))
+        }
+      }
+    })
+  }
+
+  static convertPDFToDOM (pdfContent) {
+    return new Promise((resolve, reject) => {
+    // Load the PDF content using pdf.js
+      /* eslint-disable */
+      PDFJS.workerSrc = chrome.runtime.getURL('content/pdfjs/build/pdf.worker.js');
+      const loadingTask = PDFJS.getDocument({ data: pdfContent });
+      /* eslint-enable */
+      loadingTask.promise.then(async pdfDocument => {
+        let documents = []
+        documents = await LLMTextUtils.loadDocumentForSchema(pdfDocument)
+        console.log(documents)
+        chrome.runtime.sendMessage({ scope: 'llm', cmd: 'getSelectedLLM' }, async ({ llm }) => {
+          if (llm === '') {
+            llm = Config.review.defaultLLM
+          }
+          if (llm && llm !== '') {
+            let selectedLLM = llm
+            Alerts.confirmAlert({
+              title: 'Transform PDF to JSON',
+              text: 'Do you want to transform the PDF to JSON',
+              cancelButtonText: 'Cancel',
+              callback: async () => {
+                if (documents[0].pageContent.includes('Abstract') && documents[0].pageContent.includes('Keywords')) {
+                  documents[0].pageContent = this.removeTextBetween(documents[0].pageContent, 'Abstract', 'Keywords')
+                }
+                chrome.runtime.sendMessage({
+                  scope: 'llm',
+                  cmd: 'getAPIKEY',
+                  data: selectedLLM
+                }, ({ apiKey }) => {
+                  let callback = (json) => {
+                    resolve(json) // Resolve with the JSON
+                  }
+                  if (apiKey && apiKey !== '') {
+                    chrome.runtime.sendMessage({ scope: 'prompt', cmd: 'getPrompt', data: {type: 'importPrompt'} }, ({ prompt }) => {
+                      if (!prompt) {
+                        prompt = Config.prompts.importPrompt
+                      }
+                      let params = {
+                        apiKey: apiKey,
+                        documents: documents,
+                        callback: callback,
+                        prompt: prompt,
+                        selectedLLM
+                      }
+                      if (selectedLLM === 'anthropic') {
+                        AnthropicManager.askCriteria(params)
+                      } else if (selectedLLM === 'openAI') {
+                        OpenAIManager.askCriteria(params)
+                      }
+                    })
+                  } else {
+                    let callback = () => {
+                      window.open(chrome.runtime.getURL('pages/options.html'))
+                    }
+                    Alerts.infoAlert({
+                      text: 'Please, configure your LLM.',
+                      title: 'Please select a LLM and provide your API key',
+                      callback: callback()
+                    })
+                  }
+                })
+              }
+            })
+          }
+        })
+      }).catch(error => {
+        reject(new Error('Error loading PDF document: ' + error.message))
+      })
     })
   }
 

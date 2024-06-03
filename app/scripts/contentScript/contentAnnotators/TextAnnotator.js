@@ -579,7 +579,7 @@ class TextAnnotator extends ContentAnnotator {
                 },
                 callback: () => {
                   let question = document.querySelector('.swal2-input').value
-                  TextAnnotator.askQuestionClarify(paragraph, question, criterionName, annotation)
+                  TextAnnotator.askQuestionClarify(paragraph, question, criterionName, annotation, '')
                 }
               })
             } else if (key === 'factChecking') {
@@ -635,6 +635,7 @@ class TextAnnotator extends ContentAnnotator {
     this.closeSidebar()
     // Open sweetalert
     // let that = this
+    let paragraph
 
     let updateAnnotation = (comment, level, form) => {
       form.comment = comment
@@ -658,7 +659,16 @@ class TextAnnotator extends ContentAnnotator {
       let hasLevel = (annotation, level) => {
         return annotation.tags.find((e) => { return e === Config.review.namespace + ':' + Config.review.tags.grouped.subgroup + ':' + level }) != null
       }
-
+      let selectors = annotation.target[0].selector
+      let fragmentTextSelector
+      if (selectors) {
+        fragmentTextSelector = selectors.find((selector) => {
+          return selector.type === 'TextQuoteSelector'
+        })
+      }
+      if (fragmentTextSelector) {
+        paragraph = fragmentTextSelector.exact.replace(/(\r\n|\n|\r)/gm, '')
+      }
       let groupTag = window.abwa.tagManager.getGroupFromAnnotation(annotation)
       let criterionName
       if (form.llm) {
@@ -690,12 +700,12 @@ class TextAnnotator extends ContentAnnotator {
       let factChecking = ''
       let socialJudge = ''
       let clarifications = ''
-      let userComment = ''
+      let IAComment = ''
       let userCommentHTML = ''
       if (form.comment) {
-        userComment = form.comment
+        IAComment = form.comment
       }
-      userCommentHTML = '<br/><span>Comment:</span><br/>' + '<textarea rows="4" cols="40" id="swal-textarea">' + userComment + '</textarea>'
+      userCommentHTML = '<br/><span>Comment:</span><br/>' + '<textarea rows="4" cols="40" id="swal-textarea">' + IAComment + '</textarea>'
       if (form.clarifications) {
         let clarificationsQuestions = form.clarifications
         clarificationsQuestions.forEach((e) => {
@@ -717,6 +727,104 @@ class TextAnnotator extends ContentAnnotator {
           html: '<h3 class="criterionName">' + criterionName + '</h3>' + poleChoiceRadio + userCommentHTML + clarifications + factChecking + socialJudge,
           showLoaderOnConfirm: true,
           width: '40em',
+          didRender: () => {
+            // Crear el botón "Clarify Comment"
+            const clarifyCButton = document.createElement('button')
+            clarifyCButton.innerText = 'Clarify Comment'
+            clarifyCButton.classList.add('swal2-confirm', 'swal2-styled') // Asegurarse de que tenga el mismo estilo
+            clarifyCButton.onclick = () => {
+              swal.close()
+              // this.commentAnnotationHandler(annotation
+              Alerts.inputTextAlert({
+                title: 'Clarify by LLM',
+                inputPlaceholder: 'Your question',
+                preConfirm: () => {
+                  return new Promise((resolve) => {
+                    let question = document.querySelector('.swal2-input').value
+                    if (question && question.length > 3) {
+                      resolve(question)
+                    } else {
+                      Alerts.errorAlert({text: 'Please enter a question'})
+                    }
+                  })
+                },
+                callback: () => {
+                  let question = document.querySelector('.swal2-input').value
+                  TextAnnotator.askQuestionClarify(paragraph, question, criterionName, annotation, IAComment)
+                }
+              })
+            }
+            // Crear el botón "Clarify Question"
+            let selectedClarification
+            const clarifyQButton = document.createElement('button')
+            clarifyQButton.innerText = 'Clarify Question'
+            clarifyQButton.classList.add('swal2-confirm', 'swal2-styled') // Asegurarse de que tenga el mismo estilo
+            clarifyQButton.onclick = () => {
+              let clarificationsQuestions = form.clarifications
+              let clarificationsHTML = '<div>'
+              // Construir el HTML para mostrar las preguntas de aclaración
+              clarificationsQuestions.forEach((clarification, index) => {
+                clarificationsHTML += `
+                  <div>
+                    <input type="radio" name="clarification" id="comment" value="${index}">
+                    <label for="comment">${clarification.question}</label>
+                    <br>
+                    <textarea readonly rows="4" cols="40">${clarification.answer}</textarea>
+                  </div>
+                `
+              })
+              clarificationsHTML += '</div>'
+              // Mostrar una ventana emergente con las preguntas de aclaración
+              swal.fire({
+                title: 'Select Clarification',
+                html: clarificationsHTML,
+                width: '40em',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Select',
+                preConfirm: () => {
+                  // Obtener la pregunta de aclaración seleccionada
+                  let selectedClarificationIndex = document.querySelector('input[name="clarification"]:checked').value
+                  let selectedClarification = clarificationsQuestions[selectedClarificationIndex]
+                  return selectedClarification
+                }
+              }).then((result) => {
+                // Si el usuario confirma la selección, puedes hacer algo aquí
+                if (result.isConfirmed) {
+                  selectedClarification = result.value
+                  // Hacer algo con la pregunta de aclaración seleccionada
+                  console.log('Selected Clarification:', selectedClarification)
+                  // Cerrar la ventana emergente
+                  swal.close()
+                  // this.commentAnnotationHandler(annotation
+                  let commentClasification = selectedClarification.question + ': ' + selectedClarification.answer
+                  console.log('Comment Clasification:', commentClasification)
+                  Alerts.inputTextAlert({
+                    title: 'Clarify by LLM',
+                    inputPlaceholder: 'Your question',
+                    preConfirm: () => {
+                      return new Promise((resolve) => {
+                        let question = document.querySelector('.swal2-input').value
+                        if (question && question.length > 3) {
+                          resolve(question)
+                        } else {
+                          Alerts.errorAlert({text: 'Please enter a question'})
+                        }
+                      })
+                    },
+                    callback: () => {
+                      let question = document.querySelector('.swal2-input').value
+                      TextAnnotator.askQuestionClarify(paragraph, question, criterionName, annotation, commentClasification)
+                    }
+                  })
+                }
+              })
+            }
+            document.querySelector('.swal2-actions').appendChild(clarifyCButton)
+            if (form.clarifications) {
+              document.querySelector('.swal2-actions').appendChild(clarifyQButton)
+            }
+          },
           preConfirm: () => {
             let newComment = $('#swal-textarea').val()
             let level = $('.poleRadio:checked') != null && $('.poleRadio:checked').length === 1 ? $('.poleRadio:checked')[0].value : null
@@ -737,7 +845,7 @@ class TextAnnotator extends ContentAnnotator {
     }
   }
 
-  static askQuestionClarify (excerpt, question, criterion, annotation) {
+  static askQuestionClarify (excerpt, question, criterion, annotation, comment) {
     chrome.runtime.sendMessage({ scope: 'llm', cmd: 'getSelectedLLM' }, async ({ llm }) => {
       if (llm === '') {
         llm = Config.review.defaultLLM
@@ -752,7 +860,7 @@ class TextAnnotator extends ContentAnnotator {
             clarifyPrompt = Config.prompts.clarifyPrompt
           }
           criterion = criterion.replace(/\[.*?\]/g, '')
-          clarifyPrompt = clarifyPrompt.replaceAll('[C_EXCERPT]', excerpt).replaceAll('[C_NAME]', criterion).replaceAll('[C_QUESTION]', question)
+          clarifyPrompt = clarifyPrompt.replaceAll('[C_EXCERPT]', excerpt).replaceAll('[C_NAME]', criterion).replaceAll('[C_QUESTION]', question).replaceAll('[C_COMMENT]', comment)
           Alerts.confirmAlert({
             title: 'Clarification',
             text: '<div style="text-align: justify;text-justify: inter-word">You are going to ask the following question:\n ' + clarifyPrompt + '</div>',
