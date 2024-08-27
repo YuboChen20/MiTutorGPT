@@ -551,11 +551,11 @@ class TextAnnotator extends ContentAnnotator {
         // Create items for context menu
         let items = {}
         // If current user is the same as author, allow to remove annotation or add a comment
-        items['clarify'] = {name: 'Clarify'}
-        items['factChecking'] = {name: 'Fact Checking'}
-        items['socialJudge'] = {name: 'Social judging'}
-        items['comment'] = {name: 'Render'}
-        items['delete'] = {name: 'Delete'}
+        // items['clarify'] = {name: 'Clarify'}
+        // items['factChecking'] = {name: 'Fact Checking'}
+        // items['socialJudge'] = {name: 'Social judging'}
+        items['comment'] = {name: 'View response'}
+        // items['delete'] = {name: 'Delete'}
         return {
           callback: (key) => {
             if (key === 'delete') {

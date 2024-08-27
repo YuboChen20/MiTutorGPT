@@ -54,10 +54,10 @@ export class Review {
   }
 
   isFirstComment (t) {
-    if (t.endsWith("COMMENTS: ")) {
+    if (t.endsWith("CORRECTION: ")) {
       return ''
     } else {
-      return '\r\n\t\t-'
+      return '\r\n\t\t   Q:'
     }
   }
 
@@ -179,43 +179,91 @@ export class Review {
     // Adding date at the top
     htmlContent += "<h1>Review Report </h1><p>Date: "+ new Date().toLocaleDateString() + "</p>";
 
+    // // Criterion Assessment
+    // this._assessedCriteria.forEach( (assessedCriteria) => {
+    //   const criterionUnsortedAnnotations = this.unsortedAnnotations.filter((e) => {return e.criterion === assessedCriteria.criterion})
+    //   htmlContent += "<div class='criterion'><h2>"+ assessedCriteria.criterion.toUpperCase() + "</h2>";
+    //   htmlContent += "<div class='description'><h3>"+ assessedCriteria._description + "</h3>";
+    //   if(criterionUnsortedAnnotations.length>0){
+    //     for(let i=0;i<criterionUnsortedAnnotations.length;i++){
+    //       console.log(criterionUnsortedAnnotations[i])
+    //       if(criterionUnsortedAnnotations[i].page!=null){
+    //         let highlightText = criterionUnsortedAnnotations[i]._highlightText
+    //             .replace(/&/g, "&amp;")  // Escapar '&'
+    //             .replace(/</g, "&lt;")   // Escapar '<'
+    //             .replace(/>/g, "&gt;");  // Escapar '>'
+            
+    //         htmlContent += "<p> Wrong answer: " + highlightText + "</p>";
+    //       }
+    //       if ((criterionUnsortedAnnotations[i].comment != null && criterionUnsortedAnnotations[i].comment != "") || (criterionUnsortedAnnotations.clarifications != null && criterionUnsortedAnnotations[i].clarifications != "")) {// (criterionUnsortedAnnotations.factChecking != null && criterionUnsortedAnnotations[i].factChecking != "") || (this.unsortedAnnotations[i].socialJudgement != null && this.unsortedAnnotations[i].socialJudgement != "") || (this.unsortedAnnotations[i].clarifications != null && this.unsortedAnnotations[i].clarifications != "")) {
+    //         htmlContent += "<p> Correction: " ;
+    //         if (criterionUnsortedAnnotations[i].comment != null && criterionUnsortedAnnotations[i].comment != "") htmlContent +=  criterionUnsortedAnnotations[i].comment.replace(/(\r\n|\n|\r)/gm, '')+ "</p>";
+    //         // if (this.unsortedAnnotations[i].factChecking != null && this.unsortedAnnotations[i].factChecking != "") t += this.isFirstComment(t) + 'Fact checking suggests that ' + this.unsortedAnnotations[i].factChecking.replace(/(\r\n|\n|\r)/gm, '');
+    //         // if (this.unsortedAnnotations[i].socialJudgement != null && this.unsortedAnnotations[i].socialJudgement != "") t += this.isFirstComment(t) + 'Social Judgement suggests that: ' + this.unsortedAnnotations[i].socialJudgement.replace(/(\r\n|\n|\r)/gm, '');
+    //         if (criterionUnsortedAnnotations[i].clarifications && criterionUnsortedAnnotations[i].clarifications.length > 0) {
+    //           htmlContent += '<p> Q: '
+    //           for (let j in criterionUnsortedAnnotations[i].clarifications) {
+    //             htmlContent += '[' + criterionUnsortedAnnotations[i].clarifications[j].question + '] '+ "</p>";
+    //             htmlContent += '<p> A: ' + criterionUnsortedAnnotations[i].clarifications[j].answer.replace(/(\r\n|\n|\r)/gm, '') + "</p>";
+    //           }
+    //         } 
+    //       }
+    //     }
+    //   }
+      
+    //   console.log(assessedCriteria)
+      
+    //   htmlContent += "</div>"
+    // });
     // Criterion Assessment
-    this._assessedCriteria.forEach( (assessedCriteria) => {
-      htmlContent += "<div class='criterion'><h2>"+ assessedCriteria.criterion.toUpperCase() + "</h2>";
+    this._assessedCriteria.forEach((assessedCriteria) => {
+      const criterionUnsortedAnnotations = this.unsortedAnnotations.filter((e) => e.criterion === assessedCriteria.criterion);
+      
+      // Agregar Criterion y Description
+      htmlContent += "<div class='criterion'><h2>" + assessedCriteria.criterion.toUpperCase() + "</h2>";
+      htmlContent += "<div class='description'><h3>" + assessedCriteria._description + "</h3></div>";
 
-      if (assessedCriteria.compile) {
-        htmlContent += "<div class='editable'><h3>Compilation: (" + assessedCriteria.compile.sentiment + ") </h3><textarea>" + assessedCriteria.compile.answer + "</textarea></div>";
+      if (criterionUnsortedAnnotations.length > 0) {
+        for (let i = 0; i < criterionUnsortedAnnotations.length; i++) {
+          const annotation = criterionUnsortedAnnotations[i];
+          let groupContent = "";
+
+          if (annotation.page != null) {
+            let highlightText = annotation._highlightText
+              .replace(/&/g, "&amp;")  // Escapar '&'
+              .replace(/</g, "&lt;")   // Escapar '<'
+              .replace(/>/g, "&gt;");  // Escapar '>'
+              
+            groupContent += "<hr style='border: none; border-top: 1px solid #ccc; margin: 5px 0;'>";  
+            groupContent += "<p><strong>Wrong answer:</strong> " + highlightText + "</p>";
+            
+          }
+
+          if ((annotation.comment != null && annotation.comment != "") || (annotation.clarifications != null && annotation.clarifications.length > 0)) {
+            if (annotation.comment != null && annotation.comment != "") {
+              groupContent += "<p><strong>Correction:</strong> " + annotation.comment.replace(/(\r\n|\n|\r)/gm, '') + "</p>";
+            }
+
+            if (annotation.clarifications && annotation.clarifications.length > 0) {
+              groupContent += "<div class='qa-box' style='border: 1px solid #000; padding: 10px; margin-top: 10px;'>";
+              annotation.clarifications.forEach((clarification) => {
+                groupContent += "<p><strong>Q:</strong> [" + clarification.question + "]</p>";
+                groupContent += "<p><strong>A:</strong> " + clarification.answer.replace(/(\r\n|\n|\r)/gm, '') + "</p>";
+              });
+              groupContent += "</div>";  // Cerrar cuadro de Q&A
+            }
+          }
+
+          // Solo agregar el grupo si hay contenido
+          if (groupContent) {
+            htmlContent += "<div class='annotation-group'>" + groupContent + "</div>";
+          }
+        }
       }
 
-      if (assessedCriteria.alternative) {
-        let alternativeText = assessedCriteria.alternative.replace(/<\/br>/g, '<br>').replace(/<b>/g, '<strong>').replace(/<\/b>/g, '</strong>');
-        htmlContent += "<div class='editable'>" + alternativeText + "</div>";
-      }
-
-      // Adding strengths, major concerns, minor concerns, and other comments
-      htmlContent += this.formatCategorySection('Strength', this.strengths, assessedCriteria);
-      htmlContent += this.formatCategorySection('Minor Concern', this.minorConcerns, assessedCriteria);
-      htmlContent += this.formatCategorySection('Major Concern', this.majorConcerns, assessedCriteria);
-      const criterionUnsortedAnnotations = this.unsortedAnnotations.filter((e) => {return e.criterion === assessedCriteria.criterion})
-      if (criterionUnsortedAnnotations && criterionUnsortedAnnotations.length > 0) {
-        htmlContent += this.formatUnsortedAnnotations(criterionUnsortedAnnotations, assessedCriteria);
-      }
-      htmlContent += "</div>"
+      htmlContent += "</div>"; // Cerrar criterio
+      console.log(assessedCriteria);
     });
-
-    // Presentation errors
-    if(this.presentationErrors.length>0){
-      htmlContent += "<h3>PRESENTATION ERRORS</h3>";
-      this.presentationErrors.forEach(error => {
-        htmlContent += "<p>- " + error.toGroupByCategories() + "</p>";
-      });
-    }
-
-    htmlContent += "<h3>Comments to Editors</h3><div class='editable'><textarea></textarea></div>";
-    // Append any additional content here
-
-    // Closing HTML tags
-    htmlContent += "</body></html>";
 
     return htmlContent;
   }
@@ -265,69 +313,69 @@ export class Review {
     // Summary of the work
     let t = "Review report date: " + new Date().toLocaleDateString() + "\r\n\r\n";
 
-    // Strengths
-    let strengtCriteria = this._assessedCriteria.filter(e => {
-      if (e.compile && e.compile.sentiment) {
-        return e.compile.sentiment === "Strength"
-      }
-    })
-    if(this.strengths.length>0 || strengtCriteria.length>0){
-      t+= "STRENGTHS:\r\n\r\n";
-      for (let i=0; i<strengtCriteria.length; i++) {
-        t += "- (" + strengtCriteria[i].criterion + ')' + strengtCriteria[i].compile.answer+"\r\n\r\n";
-      }
-      for(let s in this.strengths){
-        t += "- "+this.strengths[s].toSentimentString()+"\r\n\r\n";
-      }
-      t += "\r\n";
-    }
+    // // Strengths
+    // let strengtCriteria = this._assessedCriteria.filter(e => {
+    //   if (e.compile && e.compile.sentiment) {
+    //     return e.compile.sentiment === "Strength"
+    //   }
+    // })
+    // if(this.strengths.length>0 || strengtCriteria.length>0){
+    //   t+= "STRENGTHS:\r\n\r\n";
+    //   for (let i=0; i<strengtCriteria.length; i++) {
+    //     t += "- (" + strengtCriteria[i].criterion + ')' + strengtCriteria[i].compile.answer+"\r\n\r\n";
+    //   }
+    //   for(let s in this.strengths){
+    //     t += "- "+this.strengths[s].toSentimentString()+"\r\n\r\n";
+    //   }
+    //   t += "\r\n";
+    // }
 
-    // Major concerns
-    let majorWeaknessCriteria = this._assessedCriteria.filter(e => {
-      if (e.compile && e.compile.sentiment) {
-        return e.compile.sentiment === "Major weakness"
-      }
-    })
-    if(this.majorConcerns.length>0 || majorWeaknessCriteria.length>0){
-      t += "MAJOR WEAKNESSES:\r\n\r\n"
+    // // Major concerns
+    // let majorWeaknessCriteria = this._assessedCriteria.filter(e => {
+    //   if (e.compile && e.compile.sentiment) {
+    //     return e.compile.sentiment === "Major weakness"
+    //   }
+    // })
+    // if(this.majorConcerns.length>0 || majorWeaknessCriteria.length>0){
+    //   t += "MAJOR WEAKNESSES:\r\n\r\n"
 
-      for (let i=0; i<majorWeaknessCriteria.length; i++) {
-        t += '- ' + majorWeaknessCriteria[i].compile.answer+"\r\n\r\n";
-      }
-      for(let i=0;i<this.majorConcerns.length;i++){
-        t += (i+1)+"- "+this.majorConcerns[i].toSentimentString()+"\r\n\r\n";
-      }
-      t += "\r\n";
-    }
+    //   for (let i=0; i<majorWeaknessCriteria.length; i++) {
+    //     t += '- ' + majorWeaknessCriteria[i].compile.answer+"\r\n\r\n";
+    //   }
+    //   for(let i=0;i<this.majorConcerns.length;i++){
+    //     t += (i+1)+"- "+this.majorConcerns[i].toSentimentString()+"\r\n\r\n";
+    //   }
+    //   t += "\r\n";
+    // }
 
-    // Minor concerns
-    let minorWeaknessCriteria = this._assessedCriteria.filter(e => {
-      if (e.compile && e.compile.sentiment) {
-        return e.compile.sentiment === "Minor weakness"
-      }
-    })
-    if(this.minorConcerns.length>0 || minorWeaknessCriteria.length>0){
-      t += "MINOR WEAKNESSES:\r\n\r\n"
-      for (let i=0; i<minorWeaknessCriteria.length; i++) {
-        t += "- "+minorWeaknessCriteria[i].compile.answer+"\r\n\r\n";
-      }
-      for(let i=0;i<this.minorConcerns.length;i++){
-        t += (i+1)+" "+this.minorConcerns[i].toSentimentString()+"\r\n\r\n";
-      }
-      t += "\r\n";
-    }
+    // // Minor concerns
+    // let minorWeaknessCriteria = this._assessedCriteria.filter(e => {
+    //   if (e.compile && e.compile.sentiment) {
+    //     return e.compile.sentiment === "Minor weakness"
+    //   }
+    // })
+    // if(this.minorConcerns.length>0 || minorWeaknessCriteria.length>0){
+    //   t += "MINOR WEAKNESSES:\r\n\r\n"
+    //   for (let i=0; i<minorWeaknessCriteria.length; i++) {
+    //     t += "- "+minorWeaknessCriteria[i].compile.answer+"\r\n\r\n";
+    //   }
+    //   for(let i=0;i<this.minorConcerns.length;i++){
+    //     t += (i+1)+" "+this.minorConcerns[i].toSentimentString()+"\r\n\r\n";
+    //   }
+    //   t += "\r\n";
+    // }
 
-    // Presentation errors
-    if(this.presentationErrors.length>0){
-      t += "PRESENTATION:\r\n\r\n"
-      for(let i=0;i<this.presentationErrors.length;i++){
-        t += "- "+this.presentationErrors[i].toString()+"\r\n\r\n"
-      }
-      t += "\r\n"
-    }
+    // // Presentation errors
+    // if(this.presentationErrors.length>0){
+    //   t += "PRESENTATION:\r\n\r\n"
+    //   for(let i=0;i<this.presentationErrors.length;i++){
+    //     t += "- "+this.presentationErrors[i].toString()+"\r\n\r\n"
+    //   }
+    //   t += "\r\n"
+    // }
 
     // Other comments
-    t += "OTHER COMMENTS:\r\n\r\n"
+    t += "<Exercise review>\r\n\r\n"
     this._assessedCriteria.forEach( (assessedCriteria) => {
       if (assessedCriteria.alternative) {
         if (!assessedCriteria.alternative.isArray) {
@@ -337,24 +385,25 @@ export class Review {
     })
     if(this.unsortedAnnotations.length>0){
       for(let i=0;i<this.unsortedAnnotations.length;i++){
-        t += '\t* ' + this.unsortedAnnotations[i].criterion + ' '
-        if(this.unsortedAnnotations[i].page!=null) t+= '(EXCERPT: Page '+this.unsortedAnnotations[i].page+'): '
+        t += '\t* [' + this.unsortedAnnotations[i].criterion + ']'
+        if(this.unsortedAnnotations[i].page!=null) t+= '\r\n\t\t -WRONG SOLUTION :'
         t += '"' + this.unsortedAnnotations[i].highlightText + '". ';
         if ((this.unsortedAnnotations[i].comment != null && this.unsortedAnnotations[i].comment != "") || (this.unsortedAnnotations[i].factChecking != null && this.unsortedAnnotations[i].factChecking != "") || (this.unsortedAnnotations[i].socialJudgement != null && this.unsortedAnnotations[i].socialJudgement != "") || (this.unsortedAnnotations[i].clarifications != null && this.unsortedAnnotations[i].clarifications != "")) {
-          t += '\t' + '\r\n\t* COMMENTS: '
+          t += '\t' + '\r\n\t\t -CORRECTION: '
           if (this.unsortedAnnotations[i].comment != null && this.unsortedAnnotations[i].comment != "") t += this.isFirstComment(t) + this.unsortedAnnotations[i].comment.replace(/(\r\n|\n|\r)/gm, '');
-          if (this.unsortedAnnotations[i].factChecking != null && this.unsortedAnnotations[i].factChecking != "") t += this.isFirstComment(t) + 'Fact checking suggests that ' + this.unsortedAnnotations[i].factChecking.replace(/(\r\n|\n|\r)/gm, '');
-          if (this.unsortedAnnotations[i].socialJudgement != null && this.unsortedAnnotations[i].socialJudgement != "") t += this.isFirstComment(t) + 'Social Judgement suggests that: ' + this.unsortedAnnotations[i].socialJudgement.replace(/(\r\n|\n|\r)/gm, '');
+          // if (this.unsortedAnnotations[i].factChecking != null && this.unsortedAnnotations[i].factChecking != "") t += this.isFirstComment(t) + 'Fact checking suggests that ' + this.unsortedAnnotations[i].factChecking.replace(/(\r\n|\n|\r)/gm, '');
+          // if (this.unsortedAnnotations[i].socialJudgement != null && this.unsortedAnnotations[i].socialJudgement != "") t += this.isFirstComment(t) + 'Social Judgement suggests that: ' + this.unsortedAnnotations[i].socialJudgement.replace(/(\r\n|\n|\r)/gm, '');
           if (this.unsortedAnnotations[i].clarifications && this.unsortedAnnotations[i].clarifications.length > 0) {
+            t += '\r\n\t\t -YOUR QUESTIONS: '
             for (let j in this.unsortedAnnotations[i].clarifications) {
-              t += this.isFirstComment(t) + '[' + this.unsortedAnnotations[i].clarifications[j].question + ']: ' + this.unsortedAnnotations[i].clarifications[j].answer.replace(/(\r\n|\n|\r)/gm, '');
+              t += this.isFirstComment(t) + '[' + this.unsortedAnnotations[i].clarifications[j].question + '] \r\n\t\t   A:' + this.unsortedAnnotations[i].clarifications[j].answer.replace(/(\r\n|\n|\r)/gm, '');
             }
           }
         }
         t += '\r\n'
       }
     }
-    t += "\r\n<Comments to editors>";
+    t += "\r\n<End of review>";
 
     return t;
   }
@@ -410,8 +459,9 @@ export class Annotation {
 }
 
 export class AssessedTag {
-  constructor({ criterion, compile = null, alternative = null }){
+  constructor({ criterion, description, compile = null, alternative = null }){
     this._criterion = criterion
+    this._description = description
     this._compile = compile
     this._alternative = alternative
   }

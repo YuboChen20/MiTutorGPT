@@ -240,12 +240,12 @@ class GroupSelector {
     importGroupButton.addEventListener('click', this.createImportGroupButtonEventHandler())
     groupsContainer.appendChild(importGroupButton)
     // Import button
-    let importStandardGroupButton = document.createElement('div')
-    importStandardGroupButton.className = 'groupSelectorButton'
-    importStandardGroupButton.innerText = 'Standard review models'
-    importStandardGroupButton.id = 'importStandardModelButton'
-    importStandardGroupButton.addEventListener('click', this.createImportStandardGroupButtonEventHandler())
-    groupsContainer.appendChild(importStandardGroupButton)
+    // let importStandardGroupButton = document.createElement('div')
+    // importStandardGroupButton.className = 'groupSelectorButton'
+    // importStandardGroupButton.innerText = 'Standard review models'
+    // importStandardGroupButton.id = 'importStandardModelButton'
+    // importStandardGroupButton.addEventListener('click', this.createImportStandardGroupButtonEventHandler())
+    // groupsContainer.appendChild(importStandardGroupButton)
   }
 
   createGroupSelectorRenameOptionEventHandler (group) {

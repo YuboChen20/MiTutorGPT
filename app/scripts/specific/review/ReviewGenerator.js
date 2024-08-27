@@ -52,7 +52,7 @@ class ReviewGenerator {
       this.overviewImage = this.container.querySelector('#overviewButton')
       this.overviewImage.src = overviewImageURL
       this.overviewImage.addEventListener('click', () => {
-        this.generateCanvas()
+        this.goToGit()
       })
       // Set configuration button
       let configurationImageURL = chrome.runtime.getURL('/images/configuration.png')
@@ -154,6 +154,7 @@ class ReviewGenerator {
       if (compile || alternative || (tagGroupAnnotations && tagGroupAnnotations.length > 0)) {
         let data = {}
         data.criterion = currentTagGroup.config.name
+        data.description = currentTagGroup.config.options.description
         if (compile) {
           data.compile = compile
         }
@@ -174,36 +175,39 @@ class ReviewGenerator {
   generateSentimentReviewButtonHandler () {
     this.generateReviewBySentiment()
   }
-
+  goToGit () {
+    window.open("https://github.com/YuboChen20/MiTutorGPT","_blank")
+  }
   configurationButtonHandler () {
-    // Create context menu
-    $.contextMenu({
-      selector: '#configurationButton',
-      trigger: 'left',
-      build: () => {
-        // Create items for context menu
-        let items = {}
-        items['manual'] = {name: 'User manual'}
-        items['questionnaire'] = {name: 'Feedback'}
-        items['config'] = {name: 'Configuration'}
-        items['prompts'] = {name: 'Prompts'}
-        return {
-          callback: (key, opt) => {
-            if (key === 'manual') {
-              window.open("https://github.com/onekin/CoReviewer","_blank")
-            } else if (key === 'questionnaire') {
-              // window.open("https://forms.gle/5u8wsh2xUW8KcdtC9","_blank")
-              console.log('TODO')
-            } else if (key === 'config') {
-              window.open(chrome.runtime.getURL('/pages/options.html'),"_blank")
-            } else if (key === 'prompts') {
-              window.open(chrome.runtime.getURL('/pages/promptConfiguration.html'), "_blank")
-            }
-          },
-          items: items
-        }
-      }
-    })
+    window.open(chrome.runtime.getURL('/pages/options.html'),"_blank")
+    // // Create context menu
+    // $.contextMenu({
+    //   selector: '#configurationButton',
+    //   trigger: 'left',
+    //   build: () => {
+    //     // Create items for context menu
+    //     let items = {}
+    //     items['manual'] = {name: 'User manual'}
+    //     items['questionnaire'] = {name: 'Feedback'}
+    //     items['config'] = {name: 'Configuration'}
+    //     items['prompts'] = {name: 'Prompts'}
+    //     return {
+    //       callback: (key, opt) => {
+    //         if (key === 'manual') {
+    //           window.open("https://github.com/onekin/CoReviewer","_blank")
+    //         } else if (key === 'questionnaire') {
+    //           // window.open("https://forms.gle/5u8wsh2xUW8KcdtC9","_blank")
+    //           console.log('TODO')
+    //         } else if (key === 'config') {
+    //           window.open(chrome.runtime.getURL('/pages/options.html'),"_blank")
+    //         } else if (key === 'prompts') {
+    //           window.open(chrome.runtime.getURL('/pages/promptConfiguration.html'), "_blank")
+    //         }
+    //       },
+    //       items: items
+    //     }
+    //   }
+    // })
   }
 
   generateReviewByCategory () {
