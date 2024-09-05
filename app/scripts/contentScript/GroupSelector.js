@@ -226,7 +226,7 @@ class GroupSelector {
     }
     // New group button
     let newGroupButton = document.createElement('div')
-    newGroupButton.innerText = 'Create review model'
+    newGroupButton.innerText = 'Create solution model'
     newGroupButton.id = 'createNewModelButton'
     newGroupButton.className = 'groupSelectorButton'
     newGroupButton.title = 'Create a new review model'
@@ -235,7 +235,7 @@ class GroupSelector {
     // Import button
     let importGroupButton = document.createElement('div')
     importGroupButton.className = 'groupSelectorButton'
-    importGroupButton.innerText = 'Import review model'
+    importGroupButton.innerText = 'Import solution model'
     importGroupButton.id = 'importReviewModelButton'
     importGroupButton.addEventListener('click', this.createImportGroupButtonEventHandler())
     groupsContainer.appendChild(importGroupButton)

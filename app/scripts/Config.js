@@ -13,7 +13,7 @@ const Config = {
     }
   },
   prompts: {
-    annotatePrompt:
+    correctPrompt:
     'Exercise: [C_NAME]\n' + 'Exercise description: [C_DESCRIPTION]\n' + 'Solution provided : [C_SOLUTION]\n' +
     'Based on the above, please analyze the full XML exercise and generate a JSON response (Do not consider the abstract).\n ' +
     'The JSON should list every wrong XML answers, but not from paper\'s abstract.\n' +

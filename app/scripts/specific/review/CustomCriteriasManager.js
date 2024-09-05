@@ -404,7 +404,7 @@ class CustomCriteriasManager {
       // Correct the exercise by LLM
       items['annotate'] = { name: 'Correct' }
       // Solve exercise by LLM
-      items['solve'] = { name: 'Solve' }
+      // items['solve'] = { name: 'Solve' }
       // Assess criterion by LLM
       // items['compile'] = { name: 'Compile' }
       // Find alternative viewpoints by LLM
@@ -774,9 +774,9 @@ class CustomCriteriasManager {
                   })
                 }
                 if (apiKey && apiKey !== '') {
-                  chrome.runtime.sendMessage({ scope: 'prompt', cmd: 'getPrompt', data: {type: 'annotatePrompt'} }, ({ prompt }) => {
+                  chrome.runtime.sendMessage({ scope: 'prompt', cmd: 'getPrompt', data: {type: 'correctPrompt'} }, ({ prompt }) => {
                     if (!prompt) {
-                      prompt = Config.prompts.annotatePrompt
+                      prompt = Config.prompts.correctPrompt
                     }
                     prompt = prompt.replaceAll('[C_DESCRIPTION]', description).replaceAll('[C_NAME]', criterion).replaceAll('[C_SOLUTION]', solution)
                     let params = {
