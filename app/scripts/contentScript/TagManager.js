@@ -12,7 +12,7 @@ import AnnotationUtils from '../utils/AnnotationUtils'
 import ImportSchema from '../specific/review/ImportSchema'
 import DefaultCriteria from '../specific/review/DefaultCriteria'
 import Review from '../model/schema/Review'
-import CustomCriteriasManager from '../specific/review/CustomCriteriasManager'
+import CustomExercisesManager from '../specific/review/CustomExercisesManager'
 
 class TagManager {
   constructor (namespace, config) {
@@ -280,10 +280,13 @@ class TagManager {
       $(tagButton).css('background-color', color)
       tagButton.dataset.baseColor = color
     }
-    // Set handler for button
-    tagButton.addEventListener('click', handler)
-    // Tag button background color change
-    // TODO It should be better to set it as a CSS property, but currently there is not an option for that
+    tagButton.addEventListener('click', function () {
+      if (tagGroup) {
+        let currentTagGroup = _.find(window.abwa.tagManager.currentTags, currentTag => currentTag.config.annotation.id === tagGroup.config.annotation.id)
+        CustomExercisesManager.modifyExerciseHandler(currentTagGroup)
+        // console.log('this.modifyExerciseHandler(currentTagGroup)')
+      }
+    })
     tagButton.addEventListener('mouseenter', () => {
       tagButton.style.backgroundColor = ColorUtils.setAlphaToColor(ColorUtils.colorFromString(tagButton.dataset.baseColor), 0.7)
     })
@@ -291,8 +294,8 @@ class TagManager {
     tagButton.addEventListener('dblclick', function () {
       if (tagGroup) {
         let currentTagGroup = _.find(window.abwa.tagManager.currentTags, currentTag => currentTag.config.annotation.id === tagGroup.config.annotation.id)
-        CustomCriteriasManager.modifyCriteriaHandler(currentTagGroup)
-        // console.log('this.modifyCriteriaHandler(currentTagGroup)')
+        CustomExercisesManager.modifyExerciseHandler(currentTagGroup)
+        // console.log('this.modifyExerciseHandler(currentTagGroup)')
       }
     })
     tagButton.addEventListener('mouseleave', () => {
@@ -381,15 +384,10 @@ class TagManager {
       annotatedTagGroups = _.uniq(annotatedTagGroups)
       // Mark as chosen annotated tags
       for (let i = 0; i < annotatedTagGroups.length; i++) {
-        let model = window.abwa.tagManager.model
         let tagGroup = annotatedTagGroups[i]
-        let tag = model.namespace + ':' + model.config.grouped.relation + ':' + tagGroup.config.name
-        let numberOfAnnotations = annotations.filter((annotation) => {
-          return AnnotationUtils.hasATag(annotation, tag)
-        })
         let tagButton = this.tagsContainer.evidencing.querySelector('.tagButton[data-mark="' + tagGroup.config.name + '"]')
         tagButton.dataset.chosen = 'true'
-        tagButton.innerText = '(' + numberOfAnnotations.length + ') ' + tagGroup.config.name
+        tagButton.innerText = tagGroup.config.name
         // Change to a darker color
         tagButton.style.background = ColorUtils.setAlphaToColor(ColorUtils.colorFromString(tagButton.style.backgroundColor), 0.6)
       }

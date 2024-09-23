@@ -4,7 +4,7 @@ import OpenAIManager from '../../llm/openAI/OpenAIManager'
 import Alerts from '../../utils/Alerts'
 import LanguageUtils from '../../utils/LanguageUtils'
 import Events from '../../contentScript/Events'
-import Criteria from '../../model/schema/Criteria'
+import Exercise from '../../model/schema/Exercise'
 import Level from '../../model/schema/Level'
 import Review from '../../model/schema/Review'
 import DefaultCriteria from './DefaultCriteria'
@@ -14,7 +14,7 @@ import 'jquery-contextmenu/dist/jquery.contextMenu'
 import Config from '../../Config'
 import AnnotationUtils from '../../utils/AnnotationUtils'
 
-class CustomCriteriasManager {
+class CustomExercisesManager {
   constructor () {
     this.events = {}
   }
@@ -71,14 +71,14 @@ class CustomCriteriasManager {
   createCustomTheme () {
     return () => {
       Alerts.inputTextAlert({
-        title: 'Creating new review category',
-        text: 'You can give a name to the factor that you want to review.',
+        title: 'Creating new exercise category',
+        text: 'You can give a name to the factor that you want to correct.',
         input: 'text',
         preConfirm: (themeName) => {
           let themeElement = document.querySelector('.tagGroup[data-group-name="' + themeName + '"')
           if (_.isElement(themeElement)) {
             const swal = require('sweetalert2')
-            swal.showValidationMessage('A criteria group with that name already exists.')
+            swal.showValidationMessage('A exercise group with that name already exists.')
             window.abwa.sidebar.openSidebar()
           } else {
             return themeName
@@ -89,7 +89,7 @@ class CustomCriteriasManager {
             window.alert('Unable to show form to add custom factor. Contact developer.')
           } else {
             let tagName = LanguageUtils.normalizeStringToValidID(result)
-            this.createNewCustomCriteria({
+            this.createNewCustomExercise({
               name: tagName,
               description: '',
               solution: '', // Se añade la solución
@@ -107,52 +107,55 @@ class CustomCriteriasManager {
   createAddCustomCriteriaButton (groupName) {
     // Get container
     let addCriteriaButton = document.querySelector('.groupName[title="' + groupName + '"]').previousElementSibling
-    addCriteriaButton.title = 'Add new criteria to ' + groupName
+    addCriteriaButton.title = 'Add new exercise to ' + groupName
 
     // Create button for new element
-    addCriteriaButton.addEventListener('click', this.createAddCustomCriteriaButtonHandler(groupName))
+    addCriteriaButton.addEventListener('click', this.createAddCustomExerciseButtonHandler(groupName))
   }
 
-  createAddCustomCriteriaButtonHandler (groupName) {
+  createAddCustomExerciseButtonHandler (groupName) {
     return () => {
-      let criteriaName
-      let criteriaDescription
+      let exerciseName
+      let exerciseDescription
       let solution // Add the solution variable
       Alerts.multipleInputAlert({
-        title: 'Creating a new criterion for category ' + groupName,
+        title: 'Creating a new exercise for category ' + groupName,
         html: '<div>' +
-          '<input id="criteriaName" class="swal2-input customizeInput" placeholder="Type your criteria name..."/>' +
-          '</div>' +
-          '<div>' +
-          '<textarea id="criteriaDescription" class="swal2-input customizeInput" placeholder="Type your criteria description..."></textarea>' +
-          '</div>' +
-          '<div>' +
-          '<textarea id="solution" class="swal2-input customizeInput" placeholder="Type your solution..."></textarea>' + // Add the solution input field
-          '</div>',
+                '<label for="exerciseName">Identifier</label>' +
+                '<input id="exerciseName" class="swal2-input customizeInput" placeholder="Type your exercise name..."/>' +
+              '</div>' +
+              '<div>' +
+                '<label for="exerciseDescription">Statement</label>' +
+                '<textarea id="exerciseDescription" class="swal2-input customizeInput" placeholder="Type your exercise description..."></textarea>' +
+              '</div>' +
+              '<div>' +
+                '<label for="solution">Solution</label>' +
+                '<textarea id="solution" class="swal2-input customizeInput" placeholder="Type your solution..."></textarea>' +
+              '</div>',
         preConfirm: () => {
           // Retrieve values from inputs
-          criteriaName = document.getElementById('criteriaName').value
-          criteriaDescription = document.getElementById('criteriaDescription').value
+          exerciseName = document.getElementById('exerciseName').value
+          exerciseDescription = document.getElementById('exerciseDescription').value
           solution = document.getElementById('solution').value // Assign the value of the solution input field to the solution variable
-          // Find if criteria name already exists
+          // Find if exercise name already exists
           let currentTags = _.map(window.abwa.tagManager.currentTags, tag => tag.config.name)
-          let criteriaExists = _.find(currentTags, tag => tag === criteriaName)
-          if (_.isString(criteriaExists)) {
+          let exerciseExists = _.find(currentTags, tag => tag === exerciseName)
+          if (_.isString(exerciseExists)) {
             const swal = require('sweetalert2')
-            swal.showValidationMessage('A criteria with that name already exists.')
+            swal.showValidationMessage('A exercise with that name already exists.')
             window.abwa.sidebar.openSidebar()
           }
         },
         callback: (err) => {
           if (err) {
-            Alerts.errorAlert({ text: 'Unable to create this custom criteria, try it again.' })
+            Alerts.errorAlert({ text: 'Unable to create this custom exercise, try it again.' })
           } else {
             // Check if not selected cancel or esc
-            if (criteriaName) {
-              this.createNewCustomCriteria({
-                name: criteriaName,
-                description: criteriaDescription,
-                solution: solution, // Pass the solution variable to the createNewCustomCriteria function
+            if (exerciseName) {
+              this.createNewCustomExercise({
+                name: exerciseName,
+                description: exerciseDescription,
+                solution: solution, // Pass the solution variable to the createNewCustomExercise function
                 group: groupName,
                 callback: () => {
                   window.abwa.sidebar.openSidebar()
@@ -165,18 +168,18 @@ class CustomCriteriasManager {
     }
   }
 
-  createNewCustomCriteria ({ name, description = 'Custom criteria', solution, group, callback }) {
+  createNewCustomExercise ({ name, description = 'Custom exercise', solution, group, callback }) {
     let review = new Review({ reviewId: '' })
     review.storageGroup = window.abwa.groupSelector.currentGroup
-    let criteria = new Criteria({ name, description, solution, review, group: group, custom: true })
-    // Create levels for the criteria
+    let exercise = new Exercise({ name, description, solution, review, group: group, custom: true })
+    // Create levels for the exercise
     let levels = DefaultCriteria.defaultLevels
-    criteria.levels = []
+    exercise.levels = []
     for (let j = 0; j < levels.length; j++) {
-      let level = new Level({ name: levels[j].name, criteria: criteria })
-      criteria.levels.push(level)
+      let level = new Level({ name: levels[j].name, criteria: exercise })
+      exercise.levels.push(level)
     }
-    let annotations = criteria.toAnnotations()
+    let annotations = exercise.toAnnotations()
     // Push annotations to storage
     window.abwa.storageManager.client.createNewAnnotations(annotations, (err) => {
       if (err) {
@@ -254,11 +257,11 @@ class CustomCriteriasManager {
 
   initContextMenu () {
     this.destroyContextMenus()
-    this.initContextMenuForCriteria()
-    this.initContextMenuForCriteriaGroups()
+    this.initContextMenuForExercise()
+    this.initContextMenuForExerciseGroups()
   }
 
-  initContextMenuForCriteriaGroups () {
+  initContextMenuForExerciseGroups () {
     let items = {}
     // Modify menu element
     items['modify'] = { name: 'Modify criteria group' }
@@ -275,7 +278,7 @@ class CustomCriteriasManager {
               this.deleteCriteriaGroup(criteriaGroupName)
             } else if (key === 'modify') {
               // TODO
-              this.modifyCriteriaGroup(criteriaGroupName)
+              this.modifyExerciseGroup(criteriaGroupName)
             }
           },
           items: items
@@ -284,7 +287,7 @@ class CustomCriteriasManager {
     })
   }
 
-  modifyCriteriaGroup (criteriaGroupName, callback) {
+  modifyExerciseGroup (criteriaGroupName, callback) {
     // Get all criteria with criteria group name
     let arrayOfTagGroups = _.filter(_.values(window.abwa.tagManager.currentTags), tag => tag.config.options.group === criteriaGroupName)
     Alerts.inputTextAlert({
@@ -321,7 +324,7 @@ class CustomCriteriasManager {
             for (let i = 0; i < arrayOfTagGroups.length; i++) {
               let tagGroup = arrayOfTagGroups[i]
               promises.push(new Promise((resolve, reject) => {
-                CustomCriteriasManager.modifyCriteria({
+                CustomExercisesManager.modifyExercise({
                   tagGroup,
                   group: groupName,
                   callback: (err) => {
@@ -392,7 +395,7 @@ class CustomCriteriasManager {
     })
   }
 
-  initContextMenuForCriteria () {
+  initContextMenuForExercise () {
     // Define context menu items
     let arrayOfTagGroups = _.values(window.abwa.tagManager.currentTags)
     for (let i = 0; i < arrayOfTagGroups.length; i++) {
@@ -402,52 +405,16 @@ class CustomCriteriasManager {
       let solution = tagGroup.config.options.solution
       let items = {}
       // Correct the exercise by LLM
-      items['annotate'] = { name: 'Correct' }
-      // Solve exercise by LLM
-      // items['solve'] = { name: 'Solve' }
-      // Assess criterion by LLM
-      // items['compile'] = { name: 'Compile' }
-      // Find alternative viewpoints by LLM
-      // items['alternative'] = { name: 'Provide viewpoints' }
-      // Find alternative viewpoints by LLM
-      // items['recap'] = { name: 'Recap' }
+      items['correct'] = { name: 'Correct' }
       $.contextMenu({
         selector: '[data-mark="' + tagGroup.config.name + '"]',
         build: () => {
           return {
             callback: (key) => {
               // Get latest version of tag
-              let currentTagGroup = _.find(window.abwa.tagManager.currentTags, currentTag => currentTag.config.annotation.id === tagGroup.config.annotation.id)
-              if (key === 'annotate') {
-                this.annotate(criterion, description, solution)
-              } else if (key === 'solve') {
-                CustomCriteriasManager.solve(criterion, description, currentTagGroup)
+              if (key === 'correct') {
+                this.correct(criterion, description, solution)
               }
-              /* else if (key === 'compile') {
-                this.getParagraphs(criterion, (paragraphs) => {
-                  if (paragraphs) {
-                    CustomCriteriasManager.compile(criterion, description, paragraphs, currentTagGroup.config.annotation)
-                  } else {
-                    Alerts.errorAlert({
-                      title: 'There are not annotations',
-                      text: 'Please, annotate some paragraphs to assess the ' + criterion + ' criterion'
-                    })
-                  }
-                })
-              }  else if (key === 'alternative') {
-                this.getParagraphs(criterion, (paragraphs) => {
-                  if (paragraphs) {
-                    CustomCriteriasManager.alternative(criterion, description, paragraphs, currentTagGroup.config.annotation)
-                  } else {
-                    Alerts.errorAlert({
-                      title: 'There are not annotations',
-                      text: 'Please, highlight some paragraphs to assess the ' + criterion + ' criterion'
-                    })
-                  }
-                })
-              } else if (key === 'recap') {
-                CustomCriteriasManager.recap(currentTagGroup)
-              } */
             },
             items: items
           }
@@ -466,12 +433,12 @@ class CustomCriteriasManager {
         buttonText = 'OK'
       }
       Alerts.infoAlert({
-        title: 'The LLM suggests you add in your solution of ' + criterion,
-        text: annotation.paragraph,
+        title: 'The LLM suggests add this in your solution of ' + criterion,
+        text: annotation.paragraph.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
         confirmButtonText: buttonText,
         showCancelButton: false,
         callback: () => {
-          CustomCriteriasManager.showParagraphs(annotations, criterion)
+          CustomExercisesManager.showParagraphs(annotations, criterion)
         }
       })
     }
@@ -482,14 +449,14 @@ class CustomCriteriasManager {
       // let annotation =
       createdAnnotations.pop()
       if (createdAnnotations.length > 0) {
-        CustomCriteriasManager.showAnnotatedParagraphs(createdAnnotations, noCreatedAnnotations, criterion)
+        CustomExercisesManager.showAnnotatedParagraphs(createdAnnotations, noCreatedAnnotations, criterion)
       } else if (noCreatedAnnotations.length > 0) {
-        CustomCriteriasManager.showParagraphs(noCreatedAnnotations, criterion)
+        CustomExercisesManager.showParagraphs(noCreatedAnnotations, criterion)
       }
     }
   }
 
-  static deleteCriteriaHandler (tagGroup) {
+  static deleteExerciseHandler (tagGroup) {
     window.abwa.sidebar.closeSidebar()
     // Ask user if they are sure to delete the current tag
     Alerts.confirmAlert({
@@ -501,7 +468,7 @@ class CustomCriteriasManager {
         if (err) {
           // Nothing to do
         } else {
-          CustomCriteriasManager.deleteTag(tagGroup, () => {
+          CustomExercisesManager.deleteTag(tagGroup, () => {
             window.abwa.tagManager.reloadTags(() => {
               window.abwa.contentAnnotator.updateAllAnnotations(() => {
                 window.abwa.sidebar.openSidebar()
@@ -513,39 +480,42 @@ class CustomCriteriasManager {
     })
   }
 
-  static modifyCriteriaHandler (tagGroup, defaultNameValue = null, defaultDescriptionValue = null, defaultSolutionValue = null) { // Se agrega defaultSolutionValue como parámetro
-    let criteriaName
-    let criteriaDescription
+  static modifyExerciseHandler (tagGroup, defaultNameValue = null, defaultDescriptionValue = null, defaultSolutionValue = null) { // Se agrega defaultSolutionValue como parámetro
+    let exerciseName
+    let exerciseDescription
     let solution // Se añade variable para capturar el valor de Solution
-    let formCriteriaNameValue = defaultNameValue || tagGroup.config.name
-    let formCriteriaDescriptionValue = defaultDescriptionValue || tagGroup.config.options.description
+    let formExerciseNameValue = defaultNameValue || tagGroup.config.name
+    let formExerciseDescriptionValue = defaultDescriptionValue || tagGroup.config.options.description
     let formSolutionValue = defaultSolutionValue || tagGroup.config.options.solution // Se inicializa el valor de formSolutionValue
     let custom = tagGroup.config.options.custom || false
     Alerts.threeOptionsAlert({
-      title: 'Modifying name and description for criterion ' + formCriteriaNameValue,
+      title: 'Modifying name and description for criterion ' + formExerciseNameValue,
       html: '<div>' +
-        '<input id="criteriaName" class="swal2-input customizeInput" value="' + formCriteriaNameValue + '"/>' +
-        '</div>' +
-        '<div>' +
-        '<textarea id="criteriaDescription" class="swal2-input customizeInput" placeholder="Description">' + formCriteriaDescriptionValue + '</textarea>' +
-        '</div>' +
-        '<div>' + // Se corrige la etiqueta de cierre incorrecta
-        '<textarea id="solution" class="swal2-input customizeInput" placeholder="Solution">' + formSolutionValue + '</textarea>' + // Se asegura de utilizar 'solution' como ID
-        '</div>',
+        '<label for="exerciseName">Identifier</label>' +
+        '<input id="exerciseName" class="swal2-input customizeInput" value="' + formExerciseNameValue + '"/>' +
+      '</div>' +
+      '<div>' +
+        '<label for="exerciseDescription">Statement</label>' +
+        '<textarea id="exerciseDescription" class="swal2-input customizeInput" placeholder="Description">' + formExerciseDescriptionValue + '</textarea>' +
+      '</div>' +
+      '<div>' +
+        '<label for="solution">Solution</label>' +
+        '<textarea id="solution" class="swal2-input customizeInput" placeholder="Solution">' + formSolutionValue + '</textarea>' +
+      '</div>',
       preConfirm: () => {
         // Retrieve values from inputs
-        criteriaName = document.getElementById('criteriaName').value
-        criteriaDescription = document.getElementById('criteriaDescription').value
+        exerciseName = document.getElementById('exerciseName').value
+        exerciseDescription = document.getElementById('exerciseDescription').value
         solution = document.getElementById('solution').value // Se captura el valor de Solution
       },
       callback: () => {
         // Revise to execute only when OK button is pressed or criteria name and descriptions are not undefined
-        if (!_.isUndefined(criteriaName) && !_.isUndefined(criteriaDescription) && !_.isUndefined(solution)) { // Se verifica también que solution no sea undefined
-          CustomCriteriasManager.modifyCriteria({
+        if (!_.isUndefined(exerciseName) && !_.isUndefined(exerciseDescription) && !_.isUndefined(solution)) { // Se verifica también que solution no sea undefined
+          CustomExercisesManager.modifyExercise({
             tagGroup: tagGroup,
-            name: criteriaName,
-            description: criteriaDescription,
-            solution: solution, // Se pasa solution a modifyCriteria
+            name: exerciseName,
+            description: exerciseDescription,
+            solution: solution, // Se pasa solution a modifyExercise
             custom,
             callback: (err) => {
               if (err) {
@@ -564,12 +534,12 @@ class CustomCriteriasManager {
       denyButtonText: 'Delete',
       denyButtonColor: '#d33',
       denyCallback: () => {
-        CustomCriteriasManager.deleteCriteriaHandler(tagGroup)
+        CustomExercisesManager.deleteExerciseHandler(tagGroup)
       }
     })
   }
 
-  static modifyCriteria ({ tagGroup, name, description, solution, custom = true, group, callback }) {
+  static modifyExercise ({ tagGroup, name, description, solution, custom = true, group, callback }) {
     // Check if name has changed
     if (name === tagGroup.config.name || _.isUndefined(name)) {
       name = name || tagGroup.config.name
@@ -586,7 +556,7 @@ class CustomCriteriasManager {
       // Create new annotation
       let review = new Review({ reviewId: '' })
       review.storageGroup = window.abwa.groupSelector.currentGroup
-      let criteria = new Criteria({
+      let criteria = new Exercise({
         name,
         description,
         solution,
@@ -609,13 +579,13 @@ class CustomCriteriasManager {
       })
     } else {
       // If name has changed, check if there is not other criteria with the same value
-      if (CustomCriteriasManager.alreadyExistsThisCriteriaName(name)) {
+      if (CustomExercisesManager.alreadyExistsThisCriteriaName(name)) {
         // Alert already exists
         Alerts.errorAlert({
           title: 'Criteria already exists',
           text: 'A criteria with the name ' + name + ' already exists.',
           callback: () => {
-            this.modifyCriteriaHandler(tagGroup, name, description, solution)
+            this.modifyExerciseHandler(tagGroup, name, description, solution)
           }
         })
       } else {
@@ -653,7 +623,7 @@ class CustomCriteriasManager {
               // Update tagGroup annotation
               let review = new Review({ reviewId: '' })
               review.storageGroup = window.abwa.groupSelector.currentGroup
-              let criteria = new Criteria({
+              let criteria = new Exercise({
                 name,
                 description,
                 solution,
@@ -688,9 +658,9 @@ class CustomCriteriasManager {
     return s.substring(0, startIdx) + s.substring(endIdx + end.length)
   }
 
-  annotate (criterion, description, solution) {
+  correct (exercise, description, solution) {
     if (description.length < 20) {
-      Alerts.infoAlert({ text: 'You have to provide a description for the given criterion' })
+      Alerts.infoAlert({ text: 'You have to provide a description for the given exercise' })
     } else {
       chrome.runtime.sendMessage({ scope: 'llm', cmd: 'getSelectedLLM' }, async ({ llm }) => {
         if (llm === '') {
@@ -699,8 +669,8 @@ class CustomCriteriasManager {
         if (llm && llm !== '') {
           let selectedLLM = llm
           Alerts.confirmAlert({
-            title: 'Find annotations for ' + criterion,
-            text: 'Do you want to create new annotations for this criterion using ' + llm.charAt(0).toUpperCase() + llm.slice(1) + '?',
+            title: 'Find corrections for ' + exercise,
+            text: 'Do you want to create new corrections for this exercise using ' + llm.charAt(0).toUpperCase() + llm.slice(1) + '?',
             cancelButtonText: 'Cancel',
             callback: async () => {
               let documents = []
@@ -715,7 +685,7 @@ class CustomCriteriasManager {
               }, ({ apiKey }) => {
                 let callback = (json) => {
                   // let comment = json.comment
-                  let annotations = []
+                  let corrections = []
                   for (let i = 0; i < json.excerpts.length; i += 1) {
                     let excerptElement = json.excerpts[i]
                     let excerpt = ''
@@ -727,12 +697,11 @@ class CustomCriteriasManager {
                       explanation = excerptElement.explanation.toLowerCase()
                     }
                     let selectors = this.getSelectorsFromLLM(excerpt, documents)
-                    console.log(selectors)
-                    let annotation = {
+                    let correction = {
                       paragraph: excerpt,
                       selectors: selectors
                     }
-                    annotations.push(annotation)
+                    corrections.push(correction)
                     if (selectors.length > 0) {
                       let commentData = {
                         comment: explanation,
@@ -742,7 +711,7 @@ class CustomCriteriasManager {
                       }
                       let model = window.abwa.tagManager.model
                       let tag = [
-                        model.namespace + ':' + model.config.grouped.relation + ':' + criterion
+                        model.namespace + ':' + model.config.grouped.relation + ':' + exercise
                       ]
                       LanguageUtils.dispatchCustomEvent(Events.annotateByLLM, {
                         tags: tag,
@@ -751,24 +720,24 @@ class CustomCriteriasManager {
                       })
                     }
                   }
-                  let noCreatedAnnotations = annotations.filter((annotation) => annotation.selectors.length === 0)
-                  let createdAnnotations = annotations.filter((annotation) => annotation.selectors.length === 3)
+                  let noCreatedAnnotations = corrections.filter((correction) => correction.selectors.length === 0)
+                  let createdAnnotations = corrections.filter((correction) => correction.selectors.length === 3)
                   let info
                   if (createdAnnotations && createdAnnotations.length > 0) {
-                    info = ' has createad ' + createdAnnotations.length + ' annotations.'
+                    info = ' has createad ' + createdAnnotations.length + ' corrections.'
                   } else {
-                    info = ' did not annotate fragments.'
+                    info = ' has completed the correction.'
                   }
                   Alerts.infoAlert({
-                    title: 'The criterion ' + criterion + ' has been annotated ',
+                    title: 'The exercise ' + exercise + ' has been corrected',
                     text: llm.charAt(0).toUpperCase() + llm.slice(1) + info,
                     confirmButtonText: 'OK',
                     showCancelButton: false,
                     callback: () => {
                       if (createdAnnotations.length > 0) {
-                        CustomCriteriasManager.showAnnotatedParagraphs(createdAnnotations, noCreatedAnnotations, criterion)
+                        CustomExercisesManager.showAnnotatedParagraphs(createdAnnotations, noCreatedAnnotations, exercise)
                       } else if (noCreatedAnnotations.length > 0) {
-                        CustomCriteriasManager.showParagraphs(noCreatedAnnotations, criterion)
+                        CustomExercisesManager.showParagraphs(noCreatedAnnotations, exercise)
                       }
                     }
                   })
@@ -778,9 +747,9 @@ class CustomCriteriasManager {
                     if (!prompt) {
                       prompt = Config.prompts.correctPrompt
                     }
-                    prompt = prompt.replaceAll('[C_DESCRIPTION]', description).replaceAll('[C_NAME]', criterion).replaceAll('[C_SOLUTION]', solution)
+                    prompt = prompt.replaceAll('[C_DESCRIPTION]', description).replaceAll('[C_NAME]', exercise).replaceAll('[C_SOLUTION]', solution)
                     let params = {
-                      criterion: criterion,
+                      exercise: exercise,
                       description: description,
                       solution: solution,
                       apiKey: apiKey,
@@ -813,11 +782,11 @@ class CustomCriteriasManager {
     }
   }
 
-  static solve (criterion, description, tagGroup) {
+  static solve (exercise, description, tagGroup) {
     if (description.length < 20) {
-      Alerts.infoAlert({ text: 'You have to provide a description for the given criterion' })
+      Alerts.infoAlert({ text: 'You have to provide a description for the given exercise' })
     } else {
-      // this.modifyCriteriaHandler(currentTagGroup)
+      // this.modifyExerciseHandler(currentTagGroup)
       chrome.runtime.sendMessage({ scope: 'llm', cmd: 'getSelectedLLM' }, async ({ llm }) => {
         if (llm === '') {
           llm = Config.review.defaultLLM
@@ -825,7 +794,7 @@ class CustomCriteriasManager {
         if (llm && llm !== '') {
           let selectedLLM = llm
           Alerts.confirmAlert({
-            title: 'Solve exercise: ' + criterion,
+            title: 'Solve exercise: ' + exercise,
             text: 'Do you want to solve this exercise using ' + llm.charAt(0).toUpperCase() + llm.slice(1) + '?',
             cancelButtonText: 'Cancel',
             callback: async () => {
@@ -844,13 +813,13 @@ class CustomCriteriasManager {
                   let solution = json.solutions
                   console.log('hola1')
                   let custom = tagGroup.config.options.custom || false
-                  if (!_.isUndefined(criterion) && !_.isUndefined(description) && !_.isUndefined(solution)) { // Se verifica también que solution no sea undefined
+                  if (!_.isUndefined(exercise) && !_.isUndefined(description) && !_.isUndefined(solution)) { // Se verifica también que solution no sea undefined
                     console.log('hola2')
-                    CustomCriteriasManager.modifyCriteria({
+                    CustomExercisesManager.modifyExercise({
                       tagGroup: tagGroup,
-                      name: criterion,
+                      name: exercise,
                       description: description,
-                      solution: solution, // Se pasa solution a modifyCriteria
+                      solution: solution, // Se pasa solution a modifyExercise
                       custom,
                       callback: (err) => {
                         if (err) {
@@ -871,9 +840,9 @@ class CustomCriteriasManager {
                     if (!prompt) {
                       prompt = Config.prompts.solvePrompt
                     }
-                    prompt = prompt.replaceAll('[C_DESCRIPTION]', description).replaceAll('[C_NAME]', criterion)
+                    prompt = prompt.replaceAll('[C_DESCRIPTION]', description).replaceAll('[C_NAME]', exercise)
                     let params = {
-                      criterion: criterion,
+                      exercise: exercise,
                       description: description,
                       apiKey: apiKey,
                       documents: documents,
@@ -909,7 +878,7 @@ class CustomCriteriasManager {
     if (description.length < 20) {
       Alerts.infoAlert({ text: 'You have to provide a description for the given criterion' })
     } else {
-      // this.modifyCriteriaHandler(currentTagGroup)
+      // this.modifyExerciseHandler(currentTagGroup)
       chrome.runtime.sendMessage({ scope: 'llm', cmd: 'getSelectedLLM' }, async ({ llm }) => {
         if (llm === '') {
           llm = Config.review.defaultLLM
@@ -1228,4 +1197,4 @@ class CustomCriteriasManager {
   }
 }
 
-export default CustomCriteriasManager
+export default CustomExercisesManager

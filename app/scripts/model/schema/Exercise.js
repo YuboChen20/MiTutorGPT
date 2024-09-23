@@ -3,7 +3,7 @@ const jsYaml = require('js-yaml')
 const Level = require('./Level')
 const LanguageUtils = require('../../utils/LanguageUtils')
 
-class Criteria extends GuideElement {
+class Exercise extends GuideElement {
   constructor ({name, color, review, group = 'Other', description, solution, custom = false, compile, alternative}) {
     super({name, color, parentElement: review})
     this.levels = this.childElements
@@ -65,16 +65,16 @@ class Criteria extends GuideElement {
     }
   }
 
-  static createCriteriaFromObject (criteria, rubric) {
+  static createExerciseFromObject (criteria, rubric) {
     criteria.parentElement = rubric
     criteria.rubric = criteria.parentElement
     // Instance criteria object
-    let instancedCriteria = Object.assign(new Criteria({}), criteria)
+    let instancedExercise = Object.assign(new Exercise({}), criteria)
     // Instance levels
     for (let i = 0; i < criteria.levels.length; i++) {
-      instancedCriteria.levels[i] = Level.createLevelFromObject(criteria.levels[i], instancedCriteria)
+      instancedExercise.levels[i] = Level.createLevelFromObject(criteria.levels[i], instancedExercise)
     }
-    return instancedCriteria
+    return instancedExercise
   }
 
   toObject () {
@@ -99,4 +99,4 @@ class Criteria extends GuideElement {
   }
 }
 
-module.exports = Criteria
+module.exports = Exercise

@@ -1,5 +1,5 @@
 const AnnotationGuide = require('./AnnotationGuide')
-const Criteria = require('./Criteria')
+const Exercise = require('./Exercise')
 const Level = require('./Level')
 const LanguageUtils = require('../../utils/LanguageUtils')
 const DefaultCriteria = require('../../specific/review/DefaultCriteria')
@@ -37,7 +37,7 @@ class Review extends AnnotationGuide {
   static fromCriterias (criterias) {
     let review = new Review({reviewId: ''})
     for (let i = 0; i < criterias.length; i++) {
-      let criteria = new Criteria({name: criterias[i].name, description: criterias[i].description, solution: criterias[i].solution, custom: criterias[i].custom, group: criterias[i].group, resume: criterias[i].resume, alternative: criterias[i].alternative, review})
+      let criteria = new Exercise({name: criterias[i].name, description: criterias[i].description, solution: criterias[i].solution, custom: criterias[i].custom, group: criterias[i].group, resume: criterias[i].resume, alternative: criterias[i].alternative, review})
       criteria.levels = []
       for (let j = 0; j < criterias[i].levels.length; j++) {
         let level = new Level({name: criterias[i].levels[j].name, criteria: criteria})
@@ -56,7 +56,7 @@ class Review extends AnnotationGuide {
     // For each criteria create the object
     for (let i = 0; i < this.criterias.length; i++) {
       let criteria = this.criterias[i]
-      if (LanguageUtils.isInstanceOf(criteria, Criteria)) {
+      if (LanguageUtils.isInstanceOf(criteria, Exercise)) {
         object.criteria.push(criteria.toObject())
       }
     }

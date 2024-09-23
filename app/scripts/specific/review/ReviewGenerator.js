@@ -27,14 +27,14 @@ class ReviewGenerator {
       document.querySelector('#abwaSidebarContainer').insertAdjacentHTML('afterbegin', response.data)
       this.container = document.querySelector('#reviewGenerator')
       // Set generator image and event
-      let categoryGeneratorImageURL = chrome.runtime.getURL('/images/generatorC.png')
+      let categoryGeneratorImageURL = chrome.runtime.getURL('/images/generatorHtml.png')
       this.categoryBasedImage = this.container.querySelector('#categoryReviewGeneratorButton')
       this.categoryBasedImage.src = categoryGeneratorImageURL
       this.categoryBasedImage.addEventListener('click', () => {
         this.generateCategoryReviewButtonHandler()
       })
       // Set generator image and event
-      let sentimentImageURL = chrome.runtime.getURL('/images/generatorS.png')
+      let sentimentImageURL = chrome.runtime.getURL('/images/generatorTxT.png')
       this.sentimentBasedImage = this.container.querySelector('#sentimentReviewGeneratorButton')
       this.sentimentBasedImage.src = sentimentImageURL
       this.sentimentBasedImage.addEventListener('click', () => {
@@ -48,7 +48,7 @@ class ReviewGenerator {
         this.deleteAnnotations()
       })
       // Set create canvas image and event
-      let overviewImageURL = chrome.runtime.getURL('/images/overview.png')
+      let overviewImageURL = chrome.runtime.getURL('/images/gitHub.png')
       this.overviewImage = this.container.querySelector('#overviewButton')
       this.overviewImage.src = overviewImageURL
       this.overviewImage.addEventListener('click', () => {

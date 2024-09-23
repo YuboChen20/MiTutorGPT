@@ -550,12 +550,8 @@ class TextAnnotator extends ContentAnnotator {
       build: () => {
         // Create items for context menu
         let items = {}
-        // If current user is the same as author, allow to remove annotation or add a comment
-        // items['clarify'] = {name: 'Clarify'}
-        // items['factChecking'] = {name: 'Fact Checking'}
-        // items['socialJudge'] = {name: 'Social judging'}
-        items['comment'] = {name: 'View response'}
-        // items['delete'] = {name: 'Delete'}
+        items['comment'] = {name: 'View correction'}
+        items['delete'] = {name: 'Delete'}
         return {
           callback: (key) => {
             if (key === 'delete') {
@@ -670,11 +666,11 @@ class TextAnnotator extends ContentAnnotator {
         paragraph = fragmentTextSelector.exact.replace(/(\r\n|\n|\r)/gm, '')
       }
       let groupTag = window.abwa.tagManager.getGroupFromAnnotation(annotation)
-      let criterionName
+      let exerciseName
       if (form.llm) {
-        criterionName = 'Criterion:' + groupTag.config.name + ' [highlighted by ' + form.llm + ']'
+        exerciseName = 'Exercise:' + groupTag.config.name + ' [highlighted by ' + form.llm + ']'
       } else {
-        criterionName = 'Criterion:' + groupTag.config.name
+        exerciseName = ':' + groupTag.config.name
       }
       let poles = groupTag.tags.map((e) => { return e.name })
       // let poleChoiceRadio = poles.length>0 ? '<h3>Pole</h3>' : ''
@@ -709,7 +705,7 @@ class TextAnnotator extends ContentAnnotator {
       if (form.clarifications) {
         let clarificationsQuestions = form.clarifications
         clarificationsQuestions.forEach((e) => {
-          clarifications += '<br/><span>' + e.question + '</span><br/>'
+          clarifications += '<br/><span>' + e.question.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span><br/>'
           clarifications += '<textarea readonly rows="4" cols="40">' + e.answer + '</textarea>'
         })
       }
@@ -724,7 +720,7 @@ class TextAnnotator extends ContentAnnotator {
         console.log('Unable to load swal')
       } else {
         swal.fire({
-          html: '<h3 class="criterionName">' + criterionName + '</h3>' + poleChoiceRadio + userCommentHTML + clarifications + factChecking + socialJudge,
+          html: '<h3 class="exerciseName">' + exerciseName + '</h3>' + poleChoiceRadio + userCommentHTML + clarifications + factChecking + socialJudge,
           showLoaderOnConfirm: true,
           width: '40em',
           didRender: () => {
@@ -734,7 +730,6 @@ class TextAnnotator extends ContentAnnotator {
             clarifyCButton.classList.add('swal2-confirm', 'swal2-styled') // Asegurarse de que tenga el mismo estilo
             clarifyCButton.onclick = () => {
               swal.close()
-              // this.commentAnnotationHandler(annotation
               Alerts.inputTextAlert({
                 title: 'Clarify by LLM',
                 inputPlaceholder: 'Your question',
@@ -750,7 +745,7 @@ class TextAnnotator extends ContentAnnotator {
                 },
                 callback: () => {
                   let question = document.querySelector('.swal2-input').value
-                  TextAnnotator.askQuestionClarify(paragraph, question, criterionName, annotation, IAComment)
+                  TextAnnotator.askQuestionClarify(paragraph, question, exerciseName, annotation, IAComment)
                 }
               })
             }
@@ -758,7 +753,7 @@ class TextAnnotator extends ContentAnnotator {
             let selectedClarification
             const clarifyQButton = document.createElement('button')
             clarifyQButton.innerText = 'Clarify Question'
-            clarifyQButton.classList.add('swal2-confirm', 'swal2-styled') // Asegurarse de que tenga el mismo estilo
+            clarifyQButton.classList.add('swal2-confirm', 'swal2-styled')
             clarifyQButton.onclick = () => {
               let clarificationsQuestions = form.clarifications
               let clarificationsHTML = '<div>'
@@ -791,14 +786,11 @@ class TextAnnotator extends ContentAnnotator {
               }).then((result) => {
                 // Si el usuario confirma la selección, puedes hacer algo aquí
                 if (result.isConfirmed) {
-                  selectedClarification = result.value
-                  // Hacer algo con la pregunta de aclaración seleccionada
-                  console.log('Selected Clarification:', selectedClarification)
+                  selectedClarification = result.value               
                   // Cerrar la ventana emergente
                   swal.close()
                   // this.commentAnnotationHandler(annotation
                   let commentClasification = selectedClarification.question + ': ' + selectedClarification.answer
-                  console.log('Comment Clasification:', commentClasification)
                   Alerts.inputTextAlert({
                     title: 'Clarify by LLM',
                     inputPlaceholder: 'Your question',
@@ -814,7 +806,7 @@ class TextAnnotator extends ContentAnnotator {
                     },
                     callback: () => {
                       let question = document.querySelector('.swal2-input').value
-                      TextAnnotator.askQuestionClarify(paragraph, question, criterionName, annotation, commentClasification)
+                      TextAnnotator.askQuestionClarify(paragraph, question, exerciseName, annotation, commentClasification)
                     }
                   })
                 }

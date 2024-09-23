@@ -247,8 +247,8 @@ export class Review {
             if (annotation.clarifications && annotation.clarifications.length > 0) {
               groupContent += "<div class='qa-box' style='border: 1px solid #000; padding: 10px; margin-top: 10px;'>";
               annotation.clarifications.forEach((clarification) => {
-                groupContent += "<p><strong>Q:</strong> [" + clarification.question + "]</p>";
-                groupContent += "<p><strong>A:</strong> " + clarification.answer.replace(/(\r\n|\n|\r)/gm, '') + "</p>";
+                groupContent += "<p><strong>Q:</strong> [" + clarification.question.replace(/</g, '&lt;').replace(/>/g, '&gt;') + "]</p>";
+                groupContent += "<p><strong>A:</strong> " + clarification.answer.replace(/(\r\n|\n|\r)/gm, '').replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>";
               });
               groupContent += "</div>";  // Cerrar cuadro de Q&A
             }

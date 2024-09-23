@@ -1,6 +1,6 @@
 const Config = {
   review: {
-    groupName: 'AnnotatorGPT',
+    groupName: 'ExamBuddy',
     namespace: 'review',
     urlParamName: 'rag',
     defaultLLM: 'anthropic',
@@ -15,21 +15,21 @@ const Config = {
   prompts: {
     correctPrompt:
     'Exercise: [C_NAME]\n' + 'Exercise description: [C_DESCRIPTION]\n' + 'Solution provided : [C_SOLUTION]\n' +
-    'Based on the above, please analyze the full XML exercise and generate a JSON response (Do not consider the abstract).\n ' +
-    'The JSON should list every wrong XML answers, but not from paper\'s abstract.\n' +
+    'Based on the above, please analyze the full exercise and generate a JSON response (Do not consider the abstract).\n ' +
+    'TThe JSON should list every wrong answers in relation with the solution provided, but not from paper\'s abstract.\n' +
     'If all is correct, create an empty json.\n' +
-    'To correct an xml, first check if the root of the xml is set correctly (xmlns, schemalocation and etc.). Then you check the elements inside . \n' +
+    'If it is an xml exercise , first check if the root of the xml is set correctly (xmlns, schemalocation and etc.). Then you check the elements inside . \n' +
     'If the solution has an answer that does not appear in the document, the variable "text" must contain the place where the solution should appear.\n' +
     'Compare with the solution provided and description, then indicate where it is wrong and why. You do not have to include solutions that do not come from the solution provided. Save you  response in these variables (text, explanation). The excerpts should come to the point and be quite brief, so be thrifty. The format should be as follows:\n' +
     '{\n' +
     '"name": "[Exercise Name,]",\n' +
     '"excerpts": [\n' +
     '{\n' +
-    '"text": "[Write here the part of the document(DOM) that is wrong, according to the solution (at most 25 words))]",\n' +
+    '"text": "[Write here he exact sentence of the document(DOM) that is wrong, according to the solution (at most 25 words))]",\n' +
     '"explanation": "[Explains how to correct it]"\n' +
     '},\n' +
     '{\n' +
-    '"text": "[Write here the part of the document(DOM) that is wrong, according to the solution (at most 25 words))]",\n' +
+    '"text": "[Write here the exact sentence of the document(DOM) that is wrong, according to the solution (at most 25 words))]",\n' +
     '"explanation": "[Explains how to correct it]"\n' +
     '} ...(could be more)\n' +
     ']\n' +

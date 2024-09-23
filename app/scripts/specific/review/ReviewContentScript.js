@@ -1,4 +1,4 @@
-import CustomCriteriasManager from './CustomCriteriasManager'
+import CustomExercisesManager from './CustomExercisesManager'
 import ReviewGenerator from './ReviewGenerator'
 const _ = require('lodash')
 
@@ -13,8 +13,8 @@ class ReviewContentScript {
     window.abwa.specific.reviewGenerator.init(() => {
 
     })
-    window.abwa.specific.customCriteriasManager = new CustomCriteriasManager()
-    window.abwa.specific.customCriteriasManager.init(() => {
+    window.abwa.specific.CustomExercisesManager = new CustomExercisesManager()
+    window.abwa.specific.CustomExercisesManager.init(() => {
 
     })
     if (_.isFunction(callback)) {
@@ -24,7 +24,7 @@ class ReviewContentScript {
 
   destroy () {
     window.abwa.specific.reviewGenerator.destroy()
-    window.abwa.specific.customCriteriasManager.destroy()
+    window.abwa.specific.CustomExercisesManager.destroy()
   }
 }
 

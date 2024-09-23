@@ -67,7 +67,7 @@ class ImportSchema {
     // Ask user to upload the file
     Alerts.inputTextAlert({
       title: 'Upload your configuration file',
-      html: 'Here you can upload your PDF file with the configuration for the CoReviewer highlighter.',
+      html: 'Here you can upload your PDF file with the solution of the exercises.',
       input: 'file',
       callback: (err, file) => {
         if (err) {
@@ -165,7 +165,7 @@ class ImportSchema {
   }
 
   /**
-   * Ask user for a review model and it returns a javascript object with the configuration
+   * Ask user for a solution model and it returns a javascript object with the configuration
    * @param callback
    */
   static askUserForStandardConfigurationSchema (callback) {
@@ -186,7 +186,7 @@ class ImportSchema {
       html += 'Selected model:' + selectFrom.outerHTML + '<br>'
       let reviewFile
       Alerts.multipleInputAlert({
-        title: 'Please, select one of the review models',
+        title: 'Please, select one of the solution models',
         html: html,
         // position: Alerts.position.bottom, // TODO Must be check if it is better to show in bottom or not
         preConfirm: () => {

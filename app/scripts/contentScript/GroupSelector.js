@@ -215,7 +215,7 @@ class GroupSelector {
       // Name
       let nameElement = groupSelectorItem.querySelector('.groupSelectorItemName')
       nameElement.innerText = group.name
-      nameElement.title = 'Move to review model ' + group.name
+      nameElement.title = 'Move to solution model ' + group.name
       nameElement.addEventListener('click', this.createGroupChangeEventHandler(group.id))
       // Toggle
       groupSelectorItem.querySelector('.groupSelectorItemToggle').addEventListener('click', this.createGroupSelectorItemToggleEventHandler(group.id))
@@ -229,7 +229,7 @@ class GroupSelector {
     newGroupButton.innerText = 'Create solution model'
     newGroupButton.id = 'createNewModelButton'
     newGroupButton.className = 'groupSelectorButton'
-    newGroupButton.title = 'Create a new review model'
+    newGroupButton.title = 'Create a new solution model'
     newGroupButton.addEventListener('click', this.createNewReviewModelEventHandler())
     groupsContainer.appendChild(newGroupButton)
     // Import button
@@ -242,7 +242,7 @@ class GroupSelector {
     // Import button
     // let importStandardGroupButton = document.createElement('div')
     // importStandardGroupButton.className = 'groupSelectorButton'
-    // importStandardGroupButton.innerText = 'Standard review models'
+    // importStandardGroupButton.innerText = 'Standard solution models'
     // importStandardGroupButton.id = 'importStandardModelButton'
     // importStandardGroupButton.addEventListener('click', this.createImportStandardGroupButtonEventHandler())
     // groupsContainer.appendChild(importStandardGroupButton)
@@ -270,7 +270,7 @@ class GroupSelector {
     return () => {
       this.exportCriteriaConfiguration(group, (err) => {
         if (err) {
-          Alerts.errorAlert({text: 'Error when trying to export review model. Error: ' + err.message})
+          Alerts.errorAlert({text: 'Error when trying to export solution model. Error: ' + err.message})
         }
       })
     }
@@ -329,8 +329,8 @@ class GroupSelector {
 
   createNewGroup (callback) {
     Alerts.inputTextAlert({
-      title: 'Create a new review model',
-      inputPlaceholder: 'Type here the name of your new review model...',
+      title: 'Create a new solution model',
+      inputPlaceholder: 'Type here the name of your new solution model...',
       preConfirm: (groupName) => {
         if (_.isString(groupName)) {
           if (groupName.length <= 0) {
@@ -338,7 +338,7 @@ class GroupSelector {
             swal.showValidationMessage('Name cannot be empty.')
           } else if (groupName.length > 25) {
             const swal = require('sweetalert2')
-            swal.showValidationMessage('The review model name cannot be higher than 25 characters.')
+            swal.showValidationMessage('The solution model name cannot be higher than 25 characters.')
           } else {
             return groupName
           }
@@ -360,8 +360,8 @@ class GroupSelector {
 
   deleteGroup (group, callback) {
     Alerts.confirmAlert({
-      title: 'Deleting review model ' + group.name,
-      text: 'Are you sure that you want to delete the review model. You will lose all the review model and all the annotations done with this review model in all the documents.',
+      title: 'Deleting solution model ' + group.name,
+      text: 'Are you sure that you want to delete the solution model. You will lose all the solution model and all the annotations done with this solution model in all the documents.',
       alertType: Alerts.alertType.warning,
       callback: () => {
         window.abwa.storageManager.client.removeAMemberFromAGroup({id: group.id, user: this.user}, (err) => {
@@ -466,9 +466,9 @@ class GroupSelector {
       } else {
         Alerts.inputTextAlert({
           alertType: Alerts.alertType.warning,
-          title: 'Give a name to your imported review model',
-          text: 'When the configuration is imported a new highlighter is created. You can return to your other review models using the sidebar.',
-          inputPlaceholder: 'Type here the name of your review model...',
+          title: 'Give a name to your imported solution model',
+          text: 'When the configuration is imported a new highlighter is created. You can return to your other solution models using the sidebar.',
+          inputPlaceholder: 'Type here the name of your solution model...',
           preConfirm: (groupName) => {
             if (_.isString(groupName)) {
               if (groupName.length <= 0) {
@@ -476,7 +476,7 @@ class GroupSelector {
                 swal.showValidationMessage('Name cannot be empty.')
               } else if (groupName.length > 25) {
                 const swal = require('sweetalert2')
-                swal.showValidationMessage('The review model name cannot be higher than 25 characters.')
+                swal.showValidationMessage('The solution model name cannot be higher than 25 characters.')
               } else {
                 return groupName
               }
@@ -523,9 +523,9 @@ class GroupSelector {
       } else {
         Alerts.inputTextAlert({
           alertType: Alerts.alertType.warning,
-          title: 'Give a name to your imported review model',
-          text: 'When the configuration is imported a new highlighter is created. You can return to your other review models using the sidebar.',
-          inputPlaceholder: 'Type here the name of your review model...',
+          title: 'Give a name to your imported solution model',
+          text: 'When the configuration is imported a new highlighter is created. You can return to your other solution models using the sidebar.',
+          inputPlaceholder: 'Type here the name of your solution model...',
           preConfirm: (groupName) => {
             if (_.isString(groupName)) {
               if (groupName.length <= 0) {
@@ -533,7 +533,7 @@ class GroupSelector {
                 swal.showValidationMessage('Name cannot be empty.')
               } else if (groupName.length > 25) {
                 const swal = require('sweetalert2')
-                swal.showValidationMessage('The review model name cannot be higher than 25 characters.')
+                swal.showValidationMessage('The solution model name cannot be higher than 25 characters.')
               } else {
                 return groupName
               }
@@ -597,8 +597,8 @@ class GroupSelector {
 
   renameGroup (group, callback) {
     Alerts.inputTextAlert({
-      title: 'Rename review model ' + group.name,
-      inputPlaceholder: 'Type here the name of your new review model...',
+      title: 'Rename solution model ' + group.name,
+      inputPlaceholder: 'Type here the name of your new solution model...',
       inputValue: group.name,
       preConfirm: (groupName) => {
         if (_.isString(groupName)) {
@@ -607,7 +607,7 @@ class GroupSelector {
             swal.showValidationMessage('Name cannot be empty.')
           } else if (groupName.length > 25) {
             const swal = require('sweetalert2')
-            swal.showValidationMessage('The review model name cannot be higher than 25 characters.')
+            swal.showValidationMessage('The solution model name cannot be higher than 25 characters.')
           } else {
             return groupName
           }

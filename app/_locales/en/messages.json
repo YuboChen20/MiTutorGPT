@@ -1,18 +1,18 @@
 {
   "appName": {
-    "message": "AnnotateGPT",
+    "message": "ExamBuddy",
     "description": "The name of the application"
   },
   "appShortName": {
-    "message": "AnnotateGPT",
+    "message": "ExamBuddy",
     "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
   },
   "appDescription": {
-    "message": "Review papers using highlights and go!",
+    "message": "Review your exercises with the help of AI",
     "description": "The description of the application"
   },
   "browserActionTitle": {
-    "message": "AnnotateGPT",
+    "message": "ExamBuddy",
     "description": "The title of the browser action button"
   },
   "HypothesisLoginRequired": {

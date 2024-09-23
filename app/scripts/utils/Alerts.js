@@ -2,7 +2,7 @@ import _ from 'lodash'
 import TextAnnotator from '../contentScript/contentAnnotators/TextAnnotator'
 import LanguageUtils from './LanguageUtils'
 import Events from '../contentScript/Events'
-import CustomCriteriasManager from '../specific/review/CustomCriteriasManager'
+import CustomExercisesManager from '../specific/review/CustomExercisesManager'
 import jsYaml from 'js-yaml'
 
 let swal = null
@@ -224,7 +224,7 @@ class Alerts {
       const buttons = '<button id="llmAnswerOKButton" >Ok</button></br><button id="redoButton" class="llmAnswerButton">Redo</brbutton><button id="summaryButton" class="llmAnswerButton">Save answer</button>'
       swal.fire({
         title: title,
-        html: '<div style="text-align: justify;text-justify: inter-word" width=550px>' + answer + '</div></br>' + buttons,
+        html: '<div style="text-align: justify;text-justify: inter-word" width=550px>' + answer.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div></br>' + buttons,
         showCancelButton: false,
         showConfirmButton: false,
         onBeforeOpen: () => {
@@ -237,9 +237,9 @@ class Alerts {
           document.getElementById('redoButton').addEventListener('click', () => {
             swal.close()
             if (type === 'compile') {
-              CustomCriteriasManager.compile(criterion, description, paragraphs)
+              CustomExercisesManager.compile(criterion, description, paragraphs)
             } else if (type === 'alternative') {
-              CustomCriteriasManager.alternative(criterion, description)
+              CustomExercisesManager.alternative(criterion, description)
             }
           })
           document.getElementById('summaryButton').addEventListener('click', () => {
@@ -283,7 +283,7 @@ class Alerts {
       const buttons = '<button id="llmAnswerOKButton" >Ok</button></br><button id="redoButton" class="llmAnswerButton">Redo</brbutton><button id="summaryButton" class="llmAnswerButton">Save answer</button>'
       swal.fire({
         title: title,
-        html: '<div style="text-align: justify;text-justify: inter-word" width=450px>' + answer + '</div></br>' + buttons,
+        html: '<div style="text-align: justify;text-justify: inter-word" width=450px>' + answer.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div></br>' + buttons,
         showCancelButton: false,
         showConfirmButton: false,
         onBeforeOpen: () => {

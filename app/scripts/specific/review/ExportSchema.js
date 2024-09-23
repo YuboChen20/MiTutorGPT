@@ -1,4 +1,4 @@
-const Criteria = require('../../model/schema/Criteria')
+const Exercise = require('../../model/schema/Exercise')
 const Level = require('../../model/schema/Level')
 const Review = require('../../model/schema/Review')
 const _ = require('lodash')
@@ -40,7 +40,7 @@ class ExportSchema {
         } catch (e) {
           console.debug('Unable to parse criteria from schema annotation:\n' + e.message)
         }
-        return new Criteria({name: name, description: description, group: group, custom: custom, alternative: alternative, resume: resume})
+        return new Exercise({name: name, description: description, group: group, custom: custom, alternative: alternative, resume: resume})
       } else {
         return null
       }
@@ -89,7 +89,7 @@ class ExportSchema {
       })
       FileSaver.saveAs(blob, 'reviewModel.json')
     } else {
-      Alerts.errorAlert({text: 'An unexpected error happened when trying to retrieve review model configuration. Reload webpage and try again.'})
+      Alerts.errorAlert({text: 'An unexpected error happened when trying to retrieve solution model configuration. Reload webpage and try again.'})
     }
   }
 }
